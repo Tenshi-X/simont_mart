@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 10, 2024 at 03:42 PM
+-- Generation Time: Aug 10, 2024 at 09:29 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,36 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `pegawai`
 --
-
--- --------------------------------------------------------
-
---
--- Table structure for table `absensi`
---
-
-CREATE TABLE `absensi` (
-  `id_absensi` int(11) NOT NULL,
-  `id_gaji` int(11) NOT NULL,
-  `id_pegawai` int(11) NOT NULL,
-  `absen_masuk` varchar(50) NOT NULL,
-  `absen_keluar` varchar(50) NOT NULL,
-  `status_absen` varchar(50) NOT NULL,
-  `jenis_absen` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `absensi`
---
-
-INSERT INTO `absensi` (`id_absensi`, `id_gaji`, `id_pegawai`, `absen_masuk`, `absen_keluar`, `status_absen`, `jenis_absen`) VALUES
-(24, 1, 1, '2023-04-29 16:02:13', '2023-04-29 16:02:27', '2', 'Reguler'),
-(25, 2, 1, '2023-04-29 16:02:36', '2023-04-29 16:02:46', '2', 'Lembur'),
-(26, 1, 1, '2023-05-01 13:42:19', '2023-05-01 13:42:38', '2', 'Reguler'),
-(27, 2, 1, '2023-05-01 13:42:49', '2023-05-01 13:42:58', '2', 'Lembur'),
-(35, 1, 1, '2023-05-07 20:02:07', '2023-05-07 20:02:31', '2', 'Reguler'),
-(36, 2, 1, '2023-05-07 20:03:14', '2023-05-07 20:04:31', '2', 'Lembur'),
-(37, 1, 1, '2023-05-08 19:29:35', '2023-05-08 19:30:46', '2', 'Reguler'),
-(38, 2, 1, '2023-05-08 19:30:55', '2023-05-08 19:31:50', '2', 'Lembur');
 
 -- --------------------------------------------------------
 
@@ -80,12 +50,21 @@ CREATE TABLE `gaji` (
   `id_gaji` int(11) NOT NULL,
   `id_pegawai` int(11) NOT NULL,
   `jumlah_hadir` varchar(25) NOT NULL,
-  `tgl_gaji` date NOT NULL DEFAULT current_timestamp(),
+  `tgl_gaji` datetime NOT NULL DEFAULT current_timestamp(),
   `gaji_pokok` int(11) NOT NULL,
+  `gaji_lembur` int(11) NOT NULL,
   `tot_bonus` int(11) NOT NULL,
   `tot_potongan` int(11) NOT NULL,
   `tot_gaji` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `gaji`
+--
+
+INSERT INTO `gaji` (`id_gaji`, `id_pegawai`, `jumlah_hadir`, `tgl_gaji`, `gaji_pokok`, `gaji_lembur`, `tot_bonus`, `tot_potongan`, `tot_gaji`) VALUES
+(10, 3, '21', '2024-08-11 02:13:44', 3300000, 150000, 200000, 995000, 2655000),
+(11, 3, '25', '2024-08-11 02:14:15', 3300000, 200000, 200000, 595000, 3105000);
 
 -- --------------------------------------------------------
 
@@ -130,7 +109,7 @@ INSERT INTO `jam` (`id_jam`, `jam`, `nama_jam_kerja`, `keterangan`) VALUES
 (1, '08:00', 'Absen Masuk', 'Digunakan sebagai max absen masuk, jika absen melebihi jam tersebut maka absen tidak bisa di lakukan dan di anggap tidak masuk kerja'),
 (2, '16:59', 'Absen Keluar', 'Digunakan sebagai absen keluar, absen keluar harus melebihi jam tersebut'),
 (3, '17:00', 'Lembur Masuk', 'Digunakan sebagai lembur masuk, absen lembur masuk harus melebihi jam 17:00'),
-(4, '19:00', 'Lembur Keluar', 'Digunakan sebagai lembur keluar, absen lembur keluar harus melebihi jam 21:00');
+(4, '19:00', 'Lembur Keluar', 'Digunakan sebagai lembur keluar, absen lembur keluar harus melebihi jam 19:00');
 
 -- --------------------------------------------------------
 
@@ -161,12 +140,6 @@ INSERT INTO `pegawai` (`id_pegawai`, `id_jabatan`, `nama_pegawai`, `alamat`, `te
 --
 -- Indexes for dumped tables
 --
-
---
--- Indexes for table `absensi`
---
-ALTER TABLE `absensi`
-  ADD PRIMARY KEY (`id_absensi`);
 
 --
 -- Indexes for table `admin`
@@ -205,12 +178,6 @@ ALTER TABLE `pegawai`
 --
 
 --
--- AUTO_INCREMENT for table `absensi`
---
-ALTER TABLE `absensi`
-  MODIFY `id_absensi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
-
---
 -- AUTO_INCREMENT for table `admin`
 --
 ALTER TABLE `admin`
@@ -220,7 +187,7 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `gaji`
 --
 ALTER TABLE `gaji`
-  MODIFY `id_gaji` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_gaji` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `jabatan`
