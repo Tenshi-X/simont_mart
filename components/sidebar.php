@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">Admin Dashboard</a>
+    <a class="navbar-brand" href="#">Admin Simont Mart</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -15,7 +15,10 @@
                 <a class="nav-link" href="data_jabatan.php">Data Jabatan</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="kelola_gaji.php">Penggajian</a>
+                <a class="nav-link" href="tambah_gaji.php">Penggajian</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="info_jam.php">Jam Kerja</a>
             </li>
         </ul>
     </div>
