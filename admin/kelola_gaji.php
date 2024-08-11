@@ -33,6 +33,7 @@ $tot_potongan_final = $potongan_kehadiran + $potongan_kerugian;
 $tot_gaji_final = $gaji_pokok - $tot_potongan_final + $gaji_lembur + $tot_bonus;
 $status = "";
 $alert_color = "";
+$redirect = false;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id_pegawai = $_POST['id_pegawai'];
@@ -49,6 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($conn->query($sql) === TRUE) {
         $status = "Pencatatan berhasil";
         $alert_color = "bg-green-100 border-green-400 text-green-700";
+        $redirect = true;
     } else {
         $status = "Pencatatan gagal";
         $alert_color = "bg-red-100 border-red-400 text-red-700";
@@ -78,6 +80,11 @@ $employees = $conn->query("SELECT * FROM Pegawai");
             setTimeout(() => {
                 alert.classList.remove("slide-down");
                 alert.classList.add("slide-up");
+                setTimeout(() => {
+                    <?php if ($redirect): ?>
+                        window.location.href = "tambah_gaji.php";
+                    <?php endif; ?>
+                }, 300);
             }, 3000); 
         });
     </script>
