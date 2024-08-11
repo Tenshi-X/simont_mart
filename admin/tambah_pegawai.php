@@ -63,9 +63,9 @@ $jobs = $conn->query("SELECT * FROM Jabatan");
     <aside class="lg:w-1/5">
         <?php include('../components/sidebar.php'); ?>
     </aside>
-    <div class="container mx-auto lg:w-4/5 p-4 overflow-y-auto h-screen">
+    <div class="container mx-auto lg:w-4/5  overflow-y-auto h-screen">
         <?php if (!empty($status)): ?>
-        <div id="alert" class="hidden <?php echo $alert_color; ?> px-4 py-3 w-full rounded absolute top-0 left-0" role="alert">
+        <div id="alert" class="hidden <?php echo $alert_color; ?> px-4 py-3 w-full rounded relative text-right top-0 right-0" role="alert">
             <strong class="font-bold"><?php echo $status; ?></strong>
         </div>
         <script>
@@ -87,8 +87,8 @@ $jobs = $conn->query("SELECT * FROM Jabatan");
                 });
             </script>
         <?php endif; ?>
-        <h2 class="text-3xl font-bold mb-4">Tambah Pegawai</h2>
-        <form action="" method="POST" class="max-w-3xl py-4 bg-white rounded-lg">
+        <h2 class="text-3xl font-bold mb-4 p-4">Tambah Pegawai</h2>
+        <form action="" method="POST" class="max-w-3xl p-4 bg-white rounded-lg">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="mb-2">
                     <label for="nama_pegawai" class="block text-sm font-medium text-gray-700">Nama Pegawai</label>
@@ -126,12 +126,12 @@ $jobs = $conn->query("SELECT * FROM Jabatan");
                     <label for="tanggal_lahir" class="block text-sm font-medium text-gray-700">Tanggal Lahir</label>
                     <input type="date" name="tanggal_lahir" id="tanggal_lahir" class="mt-1 block w-full px-2 py-2 border border-black rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
                 </div>
-                <div class="mb-6 col-span-2">
+                <div class="mb-6 ">
                     <label for="no_hp" class="block text-sm font-medium text-gray-700">No HP</label>
                     <input type="text" name="no_hp" id="no_hp" class="mt-1 block w-full px-2 py-2 border border-black rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
                 </div>
             </div>
-            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md transition duration-300">Simpan</button>
+            <button type="submit" class="w-48 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md transition duration-300">Simpan</button>
         </form>
 
     </div>

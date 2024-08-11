@@ -45,7 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
     <div class="container mx-auto lg:w-4/5 p-4">
         <?php if (!empty($status)): ?>
-            <div id="alert" class="hidden <?php echo $alert_color; ?> px-4 py-3 w-full rounded absolute top-0 left-0" role="alert">
+            <div id="alert" class="hidden <?php echo $alert_color; ?> px-4 py-3 w-4/5 rounded absolute text-left top-0 right-0" role="alert">
                 <strong class="font-bold"><?php echo $status; ?></strong>
             </div>
             <script>

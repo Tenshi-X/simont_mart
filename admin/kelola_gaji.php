@@ -71,7 +71,7 @@ $employees = $conn->query("SELECT * FROM Pegawai");
 
     <main class="flex-1 p-6">
     <?php if (!empty($status)): ?>
-    <div id="alert" class="hidden <?php echo $alert_color; ?> px-4 py-3 w-full rounded absolute top-0 left-0" role="alert">
+    <div id="alert" class="hidden <?php echo $alert_color; ?> px-4 py-3 w-4/5 rounded absolute text-left top-0 right-0" role="alert">
         <strong class="font-bold"><?php echo $status; ?></strong>
     </div>
     <script>
@@ -92,7 +92,7 @@ $employees = $conn->query("SELECT * FROM Pegawai");
         });
     </script>
     <?php endif; ?>
-        <h2 class="text-3xl font-bold mb-6">Pencatatan Penggajian</h2>
+        <h2 class="text-2xl font-bold mb-6">Konfirmasi Pencatatan Penggajian</h2>
         
         <form action="" method="POST" class="max-w-3xl py-4 bg-white rounded-lg">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -108,24 +108,27 @@ $employees = $conn->query("SELECT * FROM Pegawai");
                 </div>
                 <div class="mb-1">
                     <label for="jumlah_hadir" class="block text-sm font-medium text-gray-700">Jumlah Hadir</label>
-                    <input type="number" id="jumlah_hadir" name="jumlah_hadir" class=" block w-full px-2 py-2 border border-black rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="<?php echo $jumlah_hadir; ?>" required>
+                    <input type="number" id="jumlah_hadir" name="jumlah_hadir" class=" block w-full px-2 py-2 border border-black rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="<?php echo $jumlah_hadir; ?>" readonly required>
                 </div>
                 <div class="mb-1">
                     <label for="gaji_pokok" class="block text-sm font-medium text-gray-700">Gaji Pokok</label>
-                    <input type="number" id="gaji_pokok" name="gaji_pokok" class=" block w-full px-2 py-2 border border-black rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="<?php echo $gaji_pokok; ?>" required>
+                    <input type="text" id="gaji_pokok_display" class="block w-full px-2 py-2 border border-black rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="<?php echo 'Rp ' . number_format($gaji_pokok, 0, ',', '.'); ?>" readonly required>
+                    <input type="hidden" id="gaji_pokok" name="gaji_pokok" value="<?php echo $gaji_pokok; ?>">
                 </div>
                 <div class="mb-1">
                     <label for="gaji_lembur" class="block text-sm font-medium text-gray-700">Gaji Lembur</label>
-                    <input type="number" id="gaji_lembur" name="gaji_lembur" class=" block w-full px-2 py-2 border border-black rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="<?php echo $gaji_lembur; ?>" required>
+                    <input type="text" id="gaji_lembur_display" class="block w-full px-2 py-2 border border-black rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="<?php echo 'Rp ' . number_format($gaji_lembur, 0, ',', '.'); ?>" readonly required>
+                    <input type="hidden" id="gaji_lembur" name="gaji_lembur" value="<?php echo $gaji_lembur; ?>">
                 </div>
                 <div class="mb-1">
                     <label for="tot_bonus" class="block text-sm font-medium text-gray-700">Total Bonus</label>
-                    <input type="number" id="tot_bonus" name="tot_bonus" class=" block w-full px-2 py-2 border border-black rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="<?php echo $tot_bonus; ?>" required>
+                    <input type="text" id="tot_bonus_display" class="block w-full px-2 py-2 border border-black rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="<?php echo 'Rp ' . number_format($tot_bonus, 0, ',', '.'); ?>" readonly required>
+                    <input type="hidden" id="tot_bonus" name="tot_bonus" value="<?php echo $tot_bonus; ?>">
                 </div>
-
                 <div class="mb-1 col-span-2">
                     <label for="tot_potongan" class="block text-sm font-medium text-gray-700">Total Potongan (Rp)</label>
-                    <input type="number" id="tot_potongan" name="tot_potongan" class=" block w-full px-2 py-2 border border-black rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="<?php echo $tot_potongan_final; ?>" readonly required>
+                    <input type="text" id="tot_potongan_display" class="block w-full px-2 py-2 border border-black rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="<?php echo 'Rp ' . number_format($tot_potongan_final, 0, ',', '.'); ?>" readonly required>
+                    <input type="hidden" id="tot_potongan" name="tot_potongan" value="<?php echo $tot_potongan_final; ?>">
                     <p class="mt-2 text-sm text-gray-600">
                         Potongan Kehadiran: Rp <?php echo number_format($potongan_kehadiran, 0, ',', '.'); ?> 
                         (<?php echo (26 - $jumlah_hadir); ?> hari tidak hadir x Rp <?php echo number_format($potongan_per_hari, 0, ',', '.'); ?> per hari)
@@ -140,9 +143,10 @@ $employees = $conn->query("SELECT * FROM Pegawai");
                     </p>
                 </div>
 
+
                 <div class="mb-4 col-span-2">
                     <label for="tot_gaji_display" class="block text-sm font-medium text-gray-700">Total Gaji</label>
-                    <input type="text" id="tot_gaji_display" class="block w-full px-2 py-2 border border-black rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="<?php echo number_format($tot_gaji_final, 0, ',', '.'); ?>" readonly required>
+                    <input type="text" id="tot_gaji_display" class="block w-full px-2 py-2 border border-black rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="<?php echo 'Rp ' . number_format($tot_gaji_final, 0, ',', '.'); ?>" readonly required>
                     <input type="hidden" id="tot_gaji" name="tot_gaji" value="<?php echo $tot_gaji_final; ?>">
                 </div>
 
@@ -170,46 +174,5 @@ $employees = $conn->query("SELECT * FROM Pegawai");
         to { transform: translateY(-100%); }
     }
 </style>
-<script>
-document.getElementById('tot_gaji_display').addEventListener('input', function(e) {
-    var value = e.target.value.replace(/[^,\d]/g, '').toString();
-    var number_string = value.replace(/[^,\d]/g, '').toString();
-    var split = number_string.split(',');
-    var sisa = split[0].length % 3;
-    var rupiah = split[0].substr(0, sisa);
-    var ribuan = split[0].substr(sisa).match(/\d{3}/gi);
 
-    if (ribuan) {
-        var separator = sisa ? '.' : '';
-        rupiah += separator + ribuan.join('.');
-    }
-
-    rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
-    e.target.value = 'Rp ' + rupiah;
-
-    document.getElementById('tot_gaji').value = value.replace(/\./g, '').replace('Rp ', '');
-});
-
-document.getElementById('tot_gaji_display').addEventListener('focus', function(e) {
-    e.target.value = document.getElementById('tot_gaji').value;
-});
-
-document.getElementById('tot_gaji_display').addEventListener('blur', function(e) {
-    var value = document.getElementById('tot_gaji').value;
-    var number_string = value.replace(/[^,\d]/g, '').toString();
-    var split = number_string.split(',');
-    var sisa = split[0].length % 3;
-    var rupiah = split[0].substr(0, sisa);
-    var ribuan = split[0].substr(sisa).match(/\d{3}/gi);
-
-    if (ribuan) {
-        var separator = sisa ? '.' : '';
-        rupiah += separator + ribuan.join('.');
-    }
-
-    rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
-    e.target.value = 'Rp ' + rupiah;
-});
-
-</script>
 <?php include('../components/footer.php'); ?>

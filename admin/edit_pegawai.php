@@ -59,7 +59,7 @@ if (isset($_GET['id'])) {
     </aside>
     <div class="container mx-auto lg:w-4/5 p-4 overflow-y-auto h-screen">
         <?php if (!empty($status)): ?>
-        <div id="alert" class="hidden <?php echo $alert_color; ?> px-4 py-3 w-full rounded absolute top-0 left-0" role="alert">
+        <div id="alert" class="hidden <?php echo $alert_color; ?> px-4 py-3 w-4/5 rounded absolute text-left top-0 right-0" role="alert">
             <strong class="font-bold"><?php echo $status; ?></strong>
         </div>
         <script>
@@ -76,8 +76,8 @@ if (isset($_GET['id'])) {
                             <?php if ($redirect): ?>
                                 window.location.href = "data_pegawai.php";
                             <?php endif; ?>
-                        }, 300);
-                    }, 3000); 
+                        }, 200);
+                    }, 2000); 
                 });
             </script>
         <?php endif; ?>
@@ -129,11 +129,26 @@ if (isset($_GET['id'])) {
                     <input type="text" name="no_hp" id="no_hp" value="<?php echo $pegawai['no_hp']; ?>" class="mt-1 block w-full px-2 py-2 border border-black rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
                 </div>
             </div>
-            <div class="flex justify-end mt-4">
-                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Update</button>
+            <div class="flex justify-start mt-4">
+                <button type="submit" class="bg-blue-500 w-48 text-white px-4 py-2 rounded hover:bg-blue-600">Update</button>
             </div>
         </form>
     </div>
 </div>
-
+<style>
+    .slide-down {
+        animation: slideDown 0.4s ease-out forwards;
+    }
+    .slide-up {
+        animation: slideUp 0.3s ease-in forwards;
+    }
+    @keyframes slideDown {
+        from { transform: translateY(-100%); }
+        to { transform: translateY(0); }
+    }
+    @keyframes slideUp {
+        from { transform: translateY(0); }
+        to { transform: translateY(-100%); }
+    }
+</style>
 <?php include('../components/footer.php'); ?>

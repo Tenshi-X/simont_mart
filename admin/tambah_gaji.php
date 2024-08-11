@@ -39,6 +39,9 @@ $employees = $conn->query("
     FROM Pegawai 
     JOIN Jabatan ON Pegawai.id_jabatan = Jabatan.id_jabatan
 ");
+
+$bonuses = $conn->query("SELECT id_bonus, nama_bonus, jumlah_bonus FROM bonus");
+
 ?>
 
 <div class="flex flex-col lg:flex-row">
@@ -75,15 +78,23 @@ $employees = $conn->query("
                     <input type="number" id="jumlah_lembur" name="jumlah_lembur" class="mt-1 block w-full px-2 py-2 border border-black rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
                 </div>
                 <div>
-                    <label for="kerugian_barang" class="block text-sm font-medium text-gray-700">Jumlah Kerugian Barang (dalam sebulan)</label>
+                    <label for="kerugian_barang" class="block text-sm font-medium text-gray-700">Jumlah Kerugian Barang (rupiah dalam sebulan)</label>
                     <input type="number" id="kerugian_barang" name="kerugian_barang" class="mt-1 block w-full px-2 py-2 border border-black rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
                 </div>
                 <div>
                     <label for="tot_bonus" class="block text-sm font-medium text-gray-700">Jumlah Bonus</label>
-                    <input type="number" id="tot_bonus" name="tot_bonus" class="mt-1 block w-full px-2 py-2 border border-black rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+                    <select name="tot_bonus" id="tot_bonus" class="mt-1 block w-full px-2 py-2 border border-black rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+                        <option value="">Pilih Bonus</option>
+                        <?php while ($row = $bonuses->fetch_assoc()) { ?>
+                            <option value="<?php echo $row['jumlah_bonus']; ?>">
+                                <?php echo $row['nama_bonus'] . ' (' . formatRupiah($row['jumlah_bonus']) . ')'; ?>
+                            </option>
+                        <?php } ?>
+                    </select>
                 </div>
+
                 <div>
-                    <label for="keterlambatan" class="block text-sm font-medium text-gray-700">keterlambatan (dalam jam)</label>
+                    <label for="keterlambatan" class="block text-sm font-medium text-gray-700">Keterlambatan (dalam jam)</label>
                     <input type="number" id="keterlambatan" name="keterlambatan" class="mt-1 block w-full px-2 py-2 border border-black rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
                 </div>
             </div>

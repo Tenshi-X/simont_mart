@@ -26,8 +26,22 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <li>
                 <a href="data_jabatan.php" class="block py-2 px-4 rounded <?php echo $current_page == 'data_jabatan.php' || $current_page == 'tambah_jabatan.php' ? 'bg-gray-700' : ''; ?>">Data Jabatan</a>
             </li>
+            <!-- Penggajian Dropdown -->
             <li>
-                <a href="tambah_gaji.php" class="block py-2 px-4 rounded <?php echo $current_page == 'tambah_gaji.php' || $current_page == 'kelola_gaji.php'? 'bg-gray-700' : ''; ?>">Penggajian</a>
+                <button id="dropdown-btn" class="w-full text-left block py-2 px-4 rounded focus:outline-none">
+                    Penggajian
+                    <svg id="dropdown-icon" class="w-4 h-4 inline ml-2 transform transition-transform duration-300 <?php echo ($current_page == 'tambah_gaji.php' || $current_page == 'data_gaji.php') ? 'rotate-180' : ''; ?>" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+                <ul id="dropdown-menu" class="pl-6 space-y-2 <?php echo ($current_page == 'tambah_gaji.php' || $current_page == 'data_gaji.php') ? 'block' : 'hidden'; ?>">
+                    <li>
+                        <a href="tambah_gaji.php" class="block py-2 px-4 rounded <?php echo $current_page == 'tambah_gaji.php' ? 'bg-gray-700' : ''; ?>">Tambah Gaji</a>
+                    </li>
+                    <li>
+                        <a href="data_gaji.php" class="block py-2 px-4 rounded <?php echo $current_page == 'data_gaji.php' ? 'bg-gray-700' : ''; ?>">Data Gaji</a>
+                    </li>
+                </ul>
             </li>
         </ul>
     </nav>
@@ -39,8 +53,16 @@ $current_page = basename($_SERVER['PHP_SELF']);
 <script>
     const sidebar = document.getElementById('sidebar');
     const hamburgerBtn = document.getElementById('hamburger-btn');
+    const dropdownBtn = document.getElementById('dropdown-btn');
+    const dropdownMenu = document.getElementById('dropdown-menu');
+    const dropdownIcon = document.getElementById('dropdown-icon');
 
     hamburgerBtn.addEventListener('click', () => {
         sidebar.classList.toggle('-translate-x-full');
+    });
+
+    dropdownBtn.addEventListener('click', () => {
+        dropdownMenu.classList.toggle('hidden');
+        dropdownIcon.classList.toggle('rotate-180');
     });
 </script>

@@ -8,7 +8,6 @@ if (!isset($_SESSION['login_user']) || $_SESSION['role'] !== 'pegawai') {
     header("location: ../index.php");
     exit;
 }
-
 $username = $_SESSION['login_user'];
 
 // Mengambil data pegawai, termasuk nama jabatan dan nomor HP, dengan prepared statement
@@ -59,31 +58,31 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
 <div class="flex flex-col lg:flex-row">
     
-<div class="lg:hidden flex items-center justify-between bg-gray-900 p-4">
-    <a href="#" class="text-xl font-bold text-white">Pegawai Simont Mart</a>
-    <button id="hamburger-btn" class="text-white focus:outline-none">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-        </svg>
-    </button>
-</div>
-<div id="sidebar" class="fixed lg:relative transform lg:transform-none -translate-x-full lg:translate-x-0 flex flex-col w-64 h-screen bg-gray-900 text-white transition-transform duration-300 ease-in-out">
-    <div class="hidden lg:flex items-center justify-center h-16 bg-gray-800">
+    <div class="lg:hidden flex items-center justify-between bg-gray-900 p-4">
         <a href="#" class="text-xl font-bold text-white">Pegawai Simont Mart</a>
+        <button id="hamburger-btn" class="text-white focus:outline-none">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+            </svg>
+        </button>
     </div>
-    <nav class="flex-grow">
-        <ul class="flex flex-col space-y-2 p-4">
-            <li>
-                <a href="rincian_pegawai.php" class="block py-2 px-4 rounded <?php echo $current_page == 'dashboard.php' ? 'bg-gray-700' : ''; ?>">Rincian Pegawai</a>
-            </li>
-        </ul>
-    </nav>
-    <div class="flex items-center justify-center h-16 bg-gray-800">
-        <a href="../logout.php" class="block py-2 px-4 rounded hover:bg-gray-700">Logout</a>
+    <div id="sidebar" class="fixed lg:relative transform lg:transform-none -translate-x-full lg:translate-x-0 flex flex-col w-64 h-screen bg-gray-900 text-white transition-transform duration-300 ease-in-out">
+        <div class="hidden lg:flex items-center justify-center h-16 bg-gray-800">
+            <a href="#" class="text-xl font-bold text-white">Pegawai Simont Mart</a>
+        </div>
+        <nav class="flex-grow">
+            <ul class="flex flex-col space-y-2 p-4">
+                <li>
+                    <a href="rincian_pegawai.php" class="block py-2 px-4 rounded <?php echo $current_page == 'dashboard.php' ? 'bg-gray-700' : ''; ?>">Rincian Pegawai</a>
+                </li>
+            </ul>
+        </nav>
+        <div class="flex items-center justify-center h-16 bg-gray-800">
+            <a href="../logout.php" class="block py-2 px-4 rounded hover:bg-gray-700">Logout</a>
+        </div>
     </div>
-</div>
 
-<div class="container mx-auto lg:w-4/5 p-4">
+    <div class="container mx-auto lg:w-4/5 p-4">
         <h2 class="text-3xl font-bold mb-6">Slip Gaji</h2>
         <div class="bg-white max-w-xl border border-grey-600 shadow-md   rounded-lg p-6 mb-6">
             <h3 class="text-xl font-semibold mb-4">Profil Pegawai</h3>
@@ -96,8 +95,11 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
         <!-- Segmen Slip Gaji -->   
         <div class="bg-white  max-w-xl border border-grey-600 border-opacity-75 shadow-md shadow-md rounded-lg p-6">
-            <h3 class="text-xl font-semibold mb-4">Rincian Gaji</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="flex justify-between mt-2">
+                <h3 class="text-xl font-semibold mb-4">Rincian Gaji</h3>
+                <a href="cetak_pdf.php" class="bg-blue-500 h-full text-white px-4 py-2 rounded hover:bg-blue-600 cetak-pdf-btn">Cetak PDF</a>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
                 <?php if ($gaji): ?>
                     <p><strong>Jumlah Hadir:</strong> <?php echo htmlspecialchars($gaji['jumlah_hadir']); ?></p>
                     <p><strong>Tanggal Gaji:</strong> <?php echo htmlspecialchars($gaji['tgl_gaji']); ?></p>
@@ -110,9 +112,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 <?php endif; ?>
             </div>
         </div>
-        <div class="flex justify-end mt-6">
-    <a href="cetak_pdf.php" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Cetak PDF</a>
-    </div>
     </div>
 </div>
 <script>

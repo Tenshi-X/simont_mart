@@ -15,14 +15,14 @@ $count_jobs = $conn->query("SELECT COUNT(*) AS count FROM Jabatan")->fetch_assoc
     <div class="container mx-auto lg:w-4/5 p-4">
         <h2 class="text-3xl font-bold mb-6">Dashboard</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="bg-blue-500 text-white rounded-lg p-4">
+            <a href="data_pegawai.php" class="bg-blue-500 text-white rounded-lg p-4 transition transform">
                 <h5 class="text-xl font-semibold">Jumlah Pegawai</h5>
                 <p class="mt-2 text-lg"><?php echo $count_employee; ?></p>
-            </div>
-            <div class="bg-green-500 text-white rounded-lg p-4">
+            </a>
+            <a href="data_jabatan.php" class="bg-green-500 text-white rounded-lg p-4 transition transform">
                 <h5 class="text-xl font-semibold">Jumlah Jabatan</h5>
                 <p class="mt-2 text-lg"><?php echo $count_jobs; ?></p>
-            </div>
+            </a>
         </div>
     </div>
 </div>

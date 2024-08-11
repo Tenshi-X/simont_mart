@@ -42,7 +42,7 @@ if ($pegawai_result->num_rows > 0) {
         $gaji = null;
     }
 } else {
-    echo "Pegawai tidak ditemukan";
+    echo "<script>alert('Pegawai tidak ditemukan'); window.location.href='rincian_pegawai.php';</script>";
     exit;
 }
 
@@ -91,4 +91,9 @@ $dompdf->setPaper('A4', 'portrait');
 $dompdf->render();
 
 // Kirimkan output ke browser sebagai PDF
-$dompdf->stream("slip_gaji_" . $pegawai['nama_pegawai'] . ".pdf", array("Attachment" => 1));
+if ($gaji) {
+    $dompdf->stream("slip_gaji_" . $pegawai['nama_pegawai'] . ".pdf", array("Attachment" => 1));
+    echo "<script>alert('PDF berhasil dicetak');</script>";
+} else {
+    echo "<script>alert('Gagal mencetak PDF, gaji tidak ditemukan'); window.location.href='rincian_pegawai.php';</script>";
+}

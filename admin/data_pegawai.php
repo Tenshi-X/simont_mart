@@ -21,44 +21,45 @@ $result = $conn->query($sql);
 ?>
 
 <div class="flex flex-col lg:flex-row">
+        
     <div class="lg:w-1/5">
-        <?php include('../components/sidebar.php'); ?>
+        <?php include('sidebar.php'); ?>
     </div>
-    <div class="container mx-auto lg:w-4/5 p-4">
-        <h2 class="text-3xl font-bold mb-4">Data Pegawai</h2>
-        <a href="tambah_pegawai.php" class="inline-block bg-blue-500 text-white px-4 py-2 rounded mb-4">Tambah Pegawai</a>
+    <div class="container mx-auto lg:w-4/5 py-4">
+        <h2 class="text-2xl font-semibold mb-4">Data Pegawai</h2>
+        <a href="tambah_pegawai.php" class="inline-block bg-blue-500 text-white px-3 py-2 rounded mb-4 text-sm">Tambah Pegawai</a>
         <div class="overflow-x-auto">
             <table class="min-w-full bg-white border border-gray-300">
-                <thead class="bg-gray-200">
+                <thead class="bg-gray-200 text-sm">
                     <tr>
-                        <th class="px-4 py-2 text-center border-b">ID Pegawai</th>
-                        <th class="px-4 py-2 text-center border-b">Nama Pegawai</th>
-                        <th class="px-4 py-2 text-center border-b">Jabatan</th>
-                        <th class="px-4 py-2 text-center border-b">Alamat</th>
-                        <th class="px-4 py-2 text-center border-b">Tempat Lahir</th>
-                        <th class="px-4 py-2 text-center border-b">Tanggal Lahir</th>
-                        <th class="px-4 py-2 text-center border-b">Tanggal Masuk Kerja</th>
-                        <th class="px-4 py-2 text-center border-b">Username</th>
-                        <th class="px-4 py-2 text-center border-b">No HP</th>
-                        <th class="px-4 py-2 text-center border-b">Action</th>
+                        <th class="px-2 py-1 w-16 text-center border-b">ID</th>
+                        <th class="px-2 py-1 text-center border-b">Nama Pegawai</th>
+                        <th class="px-2 py-1 text-center border-b">Jabatan</th>
+                        <th class="px-2 py-1 text-center border-b">Alamat</th>
+                        <th class="px-2 py-1 text-center border-b">Tempat Lahir</th>
+                        <th class="px-2 py-1 text-center border-b">Tanggal Lahir</th>
+                        <th class="px-2 py-1 text-center border-b">Tanggal Masuk Kerja</th>
+                        <th class="px-2 py-1 text-center border-b">Username</th>
+                        <th class="px-2 py-1 text-center border-b">No HP</th>
+                        <th class="px-2 py-1 text-center border-b">Action</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="text-sm">
                     <?php if ($result->num_rows > 0) { ?>
                         <?php while ($row = $result->fetch_assoc()) { ?>
                             <tr class="text-center">
-                                <td class="px-4 py-2 border-b"><?php echo $row['id_pegawai']; ?></td>
-                                <td class="px-4 py-2 border-b"><?php echo $row['nama_pegawai']; ?></td>
-                                <td class="px-4 py-2 border-b"><?php echo $row['nama_jabatan']; ?></td>
-                                <td class="px-4 py-2 border-b"><?php echo $row['alamat']; ?></td>
-                                <td class="px-4 py-2 border-b"><?php echo $row['tempat_lahir']; ?></td>
-                                <td class="px-4 py-2 border-b"><?php echo $row['tanggal_lahir']; ?></td>
-                                <td class="px-4 py-2 border-b"><?php echo $row['tgl_masuk_kerja']; ?></td>
-                                <td class="px-4 py-2 border-b"><?php echo $row['username']; ?></td>
-                                <td class="px-4 py-2 border-b"><?php echo $row['no_hp']; ?></td>
-                                <td class="px-4 py-2 border-b">
-                                    <a href="edit_pegawai.php?id=<?php echo $row['id_pegawai']; ?>" class="bg-yellow-400 text-white px-2 py-1 rounded hover:bg-yellow-500">Edit</a>
-                                    <a href="data_pegawai.php?delete_id=<?php echo $row['id_pegawai']; ?>" onclick="return confirm('Apakah Anda yakin ingin menghapus pegawai ini?');" class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">Delete</a>
+                                <td class="px-2 py-1 border-b"><?php echo $row['id_pegawai']; ?></td>
+                                <td class="px-2 py-1 border-b"><?php echo $row['nama_pegawai']; ?></td>
+                                <td class="px-2 py-1 border-b"><?php echo $row['nama_jabatan']; ?></td>
+                                <td class="px-2 py-1 border-b"><?php echo $row['alamat']; ?></td>
+                                <td class="px-2 py-1 border-b"><?php echo $row['tempat_lahir']; ?></td>
+                                <td class="px-2 py-1 border-b"><?php echo $row['tanggal_lahir']; ?></td>
+                                <td class="px-2 py-1 border-b"><?php echo $row['tgl_masuk_kerja']; ?></td>
+                                <td class="px-2 py-1 border-b"><?php echo $row['username']; ?></td>
+                                <td class="px-2 py-1 border-b"><?php echo $row['no_hp']; ?></td>
+                                <td class="px-2 py-1 border-b flex justify-center space-x-2">
+                                    <a href="edit_pegawai.php?id=<?php echo $row['id_pegawai']; ?>" class="bg-blue-400 text-white px-2 py-1 rounded text-xs hover:bg-blue-500">Edit</a>
+                                    <a href="data_pegawai.php?delete_id=<?php echo $row['id_pegawai']; ?>" onclick="return confirm('Apakah Anda yakin ingin menghapus pegawai ini?');" class="bg-red-500 text-white px-2 py-1 rounded text-xs hover:bg-red-600">Delete</a>
                                 </td>
                             </tr>
                         <?php } ?>

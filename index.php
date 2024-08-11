@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($username === 'pemilik' && $password === 'pemilik') {
         $_SESSION['login_user'] = $username;
         $_SESSION['role'] = 'pemilik';
-        header("location: pemilik/dashboard.php");
+        header("location: pemilik/data_gaji.php");
         exit;
     }
 

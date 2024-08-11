@@ -26,10 +26,10 @@ $jobs = $conn->query("SELECT * FROM Jabatan");
     <div class="lg:w-1/5">
         <?php include('../components/sidebar.php'); ?>
     </div>
-    <div class="container mx-auto lg:w-4/5 p-4">
+    <div class="container mx-auto lg:w-4/5">
         <?php if (!empty($status)): ?>
-            <div id="alert" class="hidden <?php echo $alert_color; ?> px-4 py-3 w-full rounded absolute top-0 left-0" role="alert">
-                <strong class="font-bold"><?php echo $status; ?></strong>
+            <div id="alert" class="hidden <?php echo $alert_color; ?> text-right px-4 py-3 relative w-full rounded top-0 right-0" role="alert">
+                <strong class="text-black font-bold"><?php echo $status; ?></strong>
             </div>
             <script>
                 document.addEventListener("DOMContentLoaded", function() {
@@ -45,13 +45,13 @@ $jobs = $conn->query("SELECT * FROM Jabatan");
                             <?php if ($redirect): ?>
                                 window.location.href = "data_jabatan.php";
                             <?php endif; ?>
-                        }, 300);
+                        }, 200);
                     }, 3000); 
                 });
             </script>
         <?php endif; ?>
-`       <h2 class="text-3xl font-bold mb-4">Kelola Jabatan</h2>
-        <form action="" method="POST" class="w-2/5">
+`       <h2 class="text-3xl font-bold mb-4 p-4">Kelola Jabatan</h2>
+        <form action="" method="POST" class="px-4 w-2/5">
             <div class="mb-2">
                 <label for="nm_jabatan" class="block text-sm font-medium text-gray-700">Nama Jabatan</label>
                 <input type="text" class="mt-1 block w-full px-2 py-2 border border-black rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" name="nm_jabatan" required>
@@ -65,20 +65,5 @@ $jobs = $conn->query("SELECT * FROM Jabatan");
     </div>
     
 </div>
-<style>
-    .slide-down {
-        animation: slideDown 0.2    s ease-out forwards;
-    }
-    .slide-up {
-        animation: slideUp 0.3s ease-in forwards;
-    }
-    @keyframes slideDown {
-        from { transform: translateY(-100%); }
-        to { transform: translateY(0); }
-    }
-    @keyframes slideUp {
-        from { transform: translateY(0); }
-        to { transform: translateY(-100%); }
-    }
-</style>
+
 <?php include('../components/footer.php'); ?>
