@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 10, 2024 at 09:29 PM
+-- Generation Time: Aug 11, 2024 at 10:17 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -38,7 +38,8 @@ CREATE TABLE `admin` (
 --
 
 INSERT INTO `admin` (`id_admin`, `username`, `password`) VALUES
-(3, 'admin', '12345');
+(3, 'admin', '12345'),
+(4, 'pemilik', 'pemilik');
 
 -- --------------------------------------------------------
 
@@ -64,7 +65,12 @@ CREATE TABLE `gaji` (
 
 INSERT INTO `gaji` (`id_gaji`, `id_pegawai`, `jumlah_hadir`, `tgl_gaji`, `gaji_pokok`, `gaji_lembur`, `tot_bonus`, `tot_potongan`, `tot_gaji`) VALUES
 (10, 3, '21', '2024-08-11 02:13:44', 3300000, 150000, 200000, 995000, 2655000),
-(11, 3, '25', '2024-08-11 02:14:15', 3300000, 200000, 200000, 595000, 3105000);
+(11, 3, '25', '2024-08-11 02:14:15', 3300000, 200000, 200000, 595000, 3105000),
+(12, 3, '21', '2024-08-11 13:55:01', 3300000, 200000, 200000, 995000, 2705000),
+(13, 3, '21', '2024-08-11 14:51:27', 3300000, 150000, 200000, 500000, 3150000),
+(14, 4, '23', '2024-08-11 14:55:15', 2800000, 150000, 200000, 300000, 2850000),
+(15, 4, '23', '2024-08-11 14:55:33', 2800000, 150000, 200000, 300000, 2850000),
+(16, 4, '21', '2024-08-11 14:55:59', 2800000, 150000, 2, 500000, 2450002);
 
 -- --------------------------------------------------------
 
@@ -127,7 +133,7 @@ CREATE TABLE `pegawai` (
   `tgl_masuk_kerja` date NOT NULL DEFAULT current_timestamp(),
   `username` varchar(50) NOT NULL,
   `password` varchar(50) NOT NULL,
-  `no_hp` int(13) NOT NULL
+  `no_hp` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -135,7 +141,9 @@ CREATE TABLE `pegawai` (
 --
 
 INSERT INTO `pegawai` (`id_pegawai`, `id_jabatan`, `nama_pegawai`, `alamat`, `tempat_lahir`, `tanggal_lahir`, `tgl_masuk_kerja`, `username`, `password`, `no_hp`) VALUES
-(3, 4, 'jokowi', 'jakarta', 'solo', '2024-08-01', '2024-08-08', 'awikwok', 'jokowi123', 2147483647);
+(3, 4, 'jokowi', 'jakarta', 'solo', '2024-08-01', '2024-08-08', 'awikwok', 'jokowi123', '2147483647'),
+(4, 5, 'prabowo', 'jakarta', 'jakarta', '2024-08-01', '2024-08-11', 'gedagedi', 'gibran123', '2147483647'),
+(7, 7, 'amin', 'solo', 'solo', '2024-08-14', '2024-08-15', 'amin', 'palingserius', '08746626462');
 
 --
 -- Indexes for dumped tables
@@ -181,19 +189,19 @@ ALTER TABLE `pegawai`
 -- AUTO_INCREMENT for table `admin`
 --
 ALTER TABLE `admin`
-  MODIFY `id_admin` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_admin` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `gaji`
 --
 ALTER TABLE `gaji`
-  MODIFY `id_gaji` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id_gaji` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `jabatan`
 --
 ALTER TABLE `jabatan`
-  MODIFY `id_jabatan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_jabatan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `jam`
@@ -205,7 +213,7 @@ ALTER TABLE `jam`
 -- AUTO_INCREMENT for table `pegawai`
 --
 ALTER TABLE `pegawai`
-  MODIFY `id_pegawai` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_pegawai` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Constraints for dumped tables

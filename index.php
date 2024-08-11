@@ -9,6 +9,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
+    // Pengecekan untuk pemilik
+    if ($username === 'pemilik' && $password === 'pemilik') {
+        $_SESSION['login_user'] = $username;
+        $_SESSION['role'] = 'pemilik';
+        header("location: pemilik/dashboard.php");
+        exit;
+    }
+
     // Query untuk memeriksa admin
     $stmt = $conn->prepare("SELECT * FROM admin WHERE username = ? AND password = ?");
     $stmt->bind_param("ss", $username, $password);
@@ -78,7 +86,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <style>
     .slide-down {
-        animation: slideDown 0.2    s ease-out forwards;
+        animation: slideDown 0.2s ease-out forwards;
     }
     .slide-up {
         animation: slideUp 0.5s ease-in forwards;
