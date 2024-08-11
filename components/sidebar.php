@@ -1,26 +1,49 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">Admin Simont Mart</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
+<?php
+$current_page = basename($_SERVER['PHP_SELF']);
+?>
+
+<div class="lg:hidden flex items-center justify-between bg-gray-900 p-4">
+    <a href="#" class="text-xl font-bold text-white">Admin Simont Mart</a>
+    <button id="hamburger-btn" class="text-white focus:outline-none">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+        </svg>
     </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-            <li class="nav-item">
-                <a class="nav-link" href="dashboard.php">Dashboard</a>
+</div>
+
+<div id="sidebar" class="fixed lg:relative transform lg:transform-none -translate-x-full lg:translate-x-0 flex flex-col w-64 h-screen bg-gray-900 text-white transition-transform duration-300 ease-in-out">
+    <div class="hidden lg:flex items-center justify-center h-16 bg-gray-800">
+        <a href="#" class="text-xl font-bold text-white">Admin Simont Mart</a>
+    </div>
+    <nav class="flex-grow">
+        <ul class="flex flex-col space-y-2 p-4">
+            <li>
+                <a href="dashboard.php" class="block py-2 px-4 rounded <?php echo $current_page == 'dashboard.php' ? 'bg-gray-700' : ''; ?>">Dashboard</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="data_pegawai.php">Data Pegawai</a>
+            <li>
+                <a href="data_pegawai.php" class="block py-2 px-4 rounded <?php echo $current_page == 'data_pegawai.php' || $current_page == 'tambah_pegawai.php' ? 'bg-gray-700' : ''; ?>">Data Pegawai</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="data_jabatan.php">Data Jabatan</a>
+            <li>
+                <a href="data_jabatan.php" class="block py-2 px-4 rounded <?php echo $current_page == 'data_jabatan.php' || $current_page == 'tambah_jabatan.php' ? 'bg-gray-700' : ''; ?>">Data Jabatan</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="tambah_gaji.php">Penggajian</a>
+            <li>
+                <a href="tambah_gaji.php" class="block py-2 px-4 rounded <?php echo $current_page == 'tambah_gaji.php' || $current_page == 'kelola_gaji.php'? 'bg-gray-700' : ''; ?>">Penggajian</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="info_jam.php">Jam Kerja</a>
+            <li>
+                <a href="info_jam.php" class="block py-2 px-4 rounded <?php echo $current_page == 'info_jam.php' ? 'bg-gray-700' : ''; ?>">Jam Kerja</a>
             </li>
         </ul>
+    </nav>
+    <div class="flex items-center justify-center h-16 bg-gray-800">
+        <a href="../logout.php" class="block py-2 px-4 rounded hover:bg-gray-700">Logout</a>
     </div>
-    <a class="nav-link text-white" href="../logout.php">Logout</a>
-</nav>
+</div>
+
+<script>
+    const sidebar = document.getElementById('sidebar');
+    const hamburgerBtn = document.getElementById('hamburger-btn');
+
+    hamburgerBtn.addEventListener('click', () => {
+        sidebar.classList.toggle('-translate-x-full');
+    });
+</script>

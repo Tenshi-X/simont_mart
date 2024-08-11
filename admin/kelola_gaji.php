@@ -1,6 +1,5 @@
 <?php
 include('../components/header.php');
-include('../components/sidebar.php');
 include('../components/koneksi.php');
 
 // Set timezone ke GMT+7
@@ -36,7 +35,7 @@ $tot_gaji_final = $gaji_pokok - $tot_potongan_final + $gaji_lembur + $tot_bonus;
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id_pegawai = $_POST['id_pegawai'];
     $jumlah_hadir = $_POST['jumlah_hadir'];
-    $tgl_gaji = date('Y-m-d H:i:s'); // Gunakan waktu sekarang di GMT+7
+    $tgl_gaji = date('Y-m-d H:i:s');
     $gaji_pokok = $_POST['gaji_pokok'];
     $gaji_lembur = $_POST['gaji_lembur'];
     $tot_bonus = $_POST['tot_bonus'];
@@ -55,55 +54,66 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 $employees = $conn->query("SELECT * FROM Pegawai");
 ?>
 
-<div class="container mt-5">
-    <h2>Pencatatan Penggajian</h2>
-    <form action="" method="POST">
-        <div class="form-group">
-            <label for="id_pegawai">Pegawai</label>
-            <select name="id_pegawai" class="form-control" required>
-                <?php while ($row = $employees->fetch_assoc()) { ?>
-                    <option value="<?php echo $row['id_pegawai']; ?>" <?php if($row['id_pegawai'] == $id_pegawai) echo 'selected'; ?>>
-                        <?php echo $row['nama_pegawai']; ?>
-                    </option>
-                <?php } ?>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="jumlah_hadir">Jumlah Hadir</label>
-            <input type="number" class="form-control" name="jumlah_hadir" value="<?php echo $jumlah_hadir; ?>" required>
-        </div>
-        <div class="form-group">
-            <label for="gaji_pokok">Gaji Pokok</label>
-            <input type="number" class="form-control" name="gaji_pokok" value="<?php echo $gaji_pokok; ?>" required>
-        </div>
-        <div class="form-group">
-            <label for="gaji_lembur">Gaji Lembur</label>
-            <input type="number" class="form-control" name="gaji_lembur" value="<?php echo $gaji_lembur; ?>" required>
-        </div>
-        <div class="form-group">
-            <label for="tot_bonus">Total Bonus</label>
-            <input type="number" class="form-control" name="tot_bonus" value="<?php echo $tot_bonus; ?>" required>
-        </div>
+<div class="flex flex-col lg:flex-row">
+    <aside class="lg:w-1/5">
+        <?php include('../components/sidebar.php'); ?>
+    </aside>
 
-        <div class="form-group">
-            <label for="tot_potongan">Total Potongan (Rp)</label>
-            <input type="number" class="form-control" name="tot_potongan" value="<?php echo $tot_potongan_final; ?>" readonly required>
-            <small class="form-text text-muted">
-                Potongan Kehadiran: Rp <?php echo number_format($potongan_kehadiran, 0, ',', '.'); ?> 
-                (<?php echo (26 - $jumlah_hadir); ?> hari tidak hadir x Rp <?php echo number_format($potongan_per_hari, 0, ',', '.'); ?> per hari)
-            </small>
-            <small class="form-text text-muted">
-                Potongan Kerugian Barang: Rp <?php echo number_format($potongan_kerugian, 0, ',', '.'); ?> 
-                (<?php echo $tot_potongan; ?>% dari gaji pokok)
-            </small>
-        </div>
+    <main class="flex-1 p-6">
+        <h2 class="text-3xl font-bold mb-6">Pencatatan Penggajian</h2>
+        
+        <form action="" method="POST" class="space-y-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="form-group">
+                    <label for="id_pegawai" class="block text-sm font-medium text-gray-700">Pegawai</label>
+                    <select name="id_pegawai" id="id_pegawai" class="mt-1 px-2 py-2 block w-full border-black rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
+                        <?php while ($row = $employees->fetch_assoc()) { ?>
+                            <option value="<?php echo $row['id_pegawai']; ?>" <?php if($row['id_pegawai'] == $id_pegawai) echo 'selected'; ?>>
+                                <?php echo $row['nama_pegawai']; ?>
+                            </option>
+                        <?php } ?>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="jumlah_hadir" class="block text-sm font-medium text-gray-700">Jumlah Hadir</label>
+                    <input type="number" id="jumlah_hadir" name="jumlah_hadir" class="mt-1 px-2 py-2 block w-full border-black rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" value="<?php echo $jumlah_hadir; ?>" required>
+                </div>
+                <div class="form-group">
+                    <label for="gaji_pokok" class="block text-sm font-medium text-gray-700">Gaji Pokok</label>
+                    <input type="number" id="gaji_pokok" name="gaji_pokok" class="mt-1 px-2 py-2 block w-full border-black rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" value="<?php echo $gaji_pokok; ?>" required>
+                </div>
+                <div class="form-group">
+                    <label for="gaji_lembur" class="block text-sm font-medium text-gray-700">Gaji Lembur</label>
+                    <input type="number" id="gaji_lembur" name="gaji_lembur" class="mt-1 px-2 py-2 block w-full border-black rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" value="<?php echo $gaji_lembur; ?>" required>
+                </div>
+                <div class="form-group">
+                    <label for="tot_bonus" class="block text-sm font-medium text-gray-700">Total Bonus</label>
+                    <input type="number" id="tot_bonus" name="tot_bonus" class="mt-1 px-2 py-2 block w-full border-black rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" value="<?php echo $tot_bonus; ?>" required>
+                </div>
 
-        <div class="form-group">
-            <label for="tot_gaji">Total Gaji</label>
-            <input type="number" class="form-control" name="tot_gaji" value="<?php echo $tot_gaji_final; ?>" readonly required>
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+                <div class="form-group col-span-2">
+                    <label for="tot_potongan" class="block text-sm font-medium text-gray-700">Total Potongan (Rp)</label>
+                    <input type="number" id="tot_potongan" name="tot_potongan" class="mt-1 px-2 py-2 block w-full border-black rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" value="<?php echo $tot_potongan_final; ?>" readonly required>
+                    <p class="mt-2 text-sm text-gray-600">
+                        Potongan Kehadiran: Rp <?php echo number_format($potongan_kehadiran, 0, ',', '.'); ?> 
+                        (<?php echo (26 - $jumlah_hadir); ?> hari tidak hadir x Rp <?php echo number_format($potongan_per_hari, 0, ',', '.'); ?> per hari)
+                    </p>
+                    <p class="mt-2 text-sm text-gray-600">
+                        Potongan Kerugian Barang: Rp <?php echo number_format($potongan_kerugian, 0, ',', '.'); ?> 
+                        (<?php echo $tot_potongan; ?>% dari gaji pokok)
+                    </p>
+                </div>
+
+                <div class="form-group col-span-2">
+                    <label for="tot_gaji" class="block text-sm font-medium text-gray-700">Total Gaji</label>
+                    <input type="number" id="tot_gaji" name="tot_gaji" class="mt-1 px-2 py-2 block w-full border-black rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" value="<?php echo $tot_gaji_final; ?>" readonly required>
+                </div>
+            </div>
+            <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Submit
+            </button>
+        </form>
+    </main>
 </div>
 
 <?php include('../components/footer.php'); ?>

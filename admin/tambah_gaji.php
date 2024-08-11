@@ -1,7 +1,10 @@
 <?php
 include('../components/header.php');
-include('../components/sidebar.php');
 include('../components/koneksi.php');
+
+function formatRupiah($number) {
+    return 'Rp ' . number_format($number, 0, ',', '.');
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id_pegawai = $_POST['id_pegawai'];
@@ -35,45 +38,55 @@ $employees = $conn->query("
     FROM Pegawai 
     JOIN Jabatan ON Pegawai.id_jabatan = Jabatan.id_jabatan
 ");
-
 ?>
 
-<div class="container mt-5">
-    <h2>Tambah Data Gaji</h2>
-    <form action="" method="POST">
-        <div class="form-group">
-            <label for="id_pegawai">Nama Pegawai</label>
-            <select name="id_pegawai" id="id_pegawai" class="form-control" required onchange="updateGajiPokok()">
-                <option value="">Pilih Pegawai</option>
-                <?php while ($row = $employees->fetch_assoc()) { ?>
-                    <option value="<?php echo $row['id_pegawai']; ?>" data-gaji="<?php echo $row['gaji_pokok']; ?>">
-                        <?php echo $row['nama_pegawai']; ?>
-                    </option>
-                <?php } ?>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="jumlah_hadir">Jumlah Hadir</label>
-            <input type="number" class="form-control" name="jumlah_hadir" required>
-        </div>
-        <div class="form-group">
-            <label for="gaji_pokok">Gaji Pokok</label>
-            <input type="number" class="form-control" name="gaji_pokok" id="gaji_pokok" readonly>
-        </div>
-        <div class="form-group">
-            <label for="jumlah_lembur">Jumlah Lembur (Hari)</label>
-            <input type="number" class="form-control" name="jumlah_lembur" required>
-        </div>
-        <div class="form-group">
-            <label for="kerugian_barang">Jumlah Kerugian Barang (dalam sebulan)</label>
-            <input type="number" class="form-control" name="kerugian_barang" required>
-        </div>
-        <div class="form-group">
-            <label for="tot_bonus">Jumlah Bonus</label>
-            <input type="number" class="form-control" name="tot_bonus" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Hitung Gaji</button>
-    </form>
+<div class="flex flex-col lg:flex-row">
+    <aside class="lg:w-1/5">
+        <?php include('../components/sidebar.php'); ?>
+    </aside>
+
+    <main class="flex-1 p-6 ">
+        <h2 class="text-3xl font-bold mb-8">Tambah Data Gaji</h2>
+        <form action="" method="POST" class="space-y-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label for="id_pegawai" class="block text-sm font-medium text-gray-700">Nama Pegawai</label>
+                    <select name="id_pegawai" id="id_pegawai" class="mt-1 block w-full px-2 py-2 border border-black rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required onchange="updateGajiPokok()">
+                        <option value="">Pilih Pegawai</option>
+                        <?php while ($row = $employees->fetch_assoc()) { ?>
+                            <option value="<?php echo $row['id_pegawai']; ?>" data-gaji="<?php echo $row['gaji_pokok']; ?>">
+                                <?php echo $row['nama_pegawai']; ?>
+                            </option>
+                        <?php } ?>
+                    </select>
+                </div>
+                <div>
+                    <label for="jumlah_hadir" class="block text-sm font-medium text-gray-700">Jumlah Hadir</label>
+                    <input type="number" id="jumlah_hadir" name="jumlah_hadir" class="mt-1 block w-full px-2 py-2 border border-black rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+                </div>
+                <div>
+                    <label for="gaji_pokok_display" class="block text-sm font-medium text-gray-700">Gaji Pokok</label>
+                    <input type="text" id="gaji_pokok_display" class="mt-1 block w-full px-2 py-2 border border-black rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" readonly>
+                    <input type="hidden" id="gaji_pokok" name="gaji_pokok">
+                </div>
+                <div>
+                    <label for="jumlah_lembur" class="block text-sm font-medium text-gray-700">Jumlah Lembur (Hari)</label>
+                    <input type="number" id="jumlah_lembur" name="jumlah_lembur" class="mt-1 block w-full px-2 py-2 border border-black rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+                </div>
+                <div>
+                    <label for="kerugian_barang" class="block text-sm font-medium text-gray-700">Jumlah Kerugian Barang (dalam sebulan)</label>
+                    <input type="number" id="kerugian_barang" name="kerugian_barang" class="mt-1 block w-full px-2 py-2 border border-black rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+                </div>
+                <div>
+                    <label for="tot_bonus" class="block text-sm font-medium text-gray-700">Jumlah Bonus</label>
+                    <input type="number" id="tot_bonus" name="tot_bonus" class="mt-1 block w-full px-2 py-2 border border-black rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+                </div>
+            </div>
+            <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Hitung Gaji
+            </button>
+        </form>
+    </main>
 </div>
 
 <script>
@@ -81,6 +94,23 @@ function updateGajiPokok() {
     var select = document.getElementById("id_pegawai");
     var gajiPokok = select.options[select.selectedIndex].getAttribute("data-gaji");
     document.getElementById("gaji_pokok").value = gajiPokok;
+    document.getElementById("gaji_pokok_display").value = formatRupiah(gajiPokok);
+}
+
+function formatRupiah(angka) {
+    var number_string = angka.toString().replace(/[^,\d]/g, '');
+    var split = number_string.split(',');
+    var sisa = split[0].length % 3;
+    var rupiah = split[0].substr(0, sisa);
+    var ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+    if (ribuan) {
+        var separator = sisa ? '.' : '';
+        rupiah += separator + ribuan.join('.');
+    }
+
+    rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
+    return 'Rp ' + rupiah;
 }
 </script>
 

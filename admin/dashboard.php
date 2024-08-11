@@ -1,6 +1,5 @@
 <?php
 include('../components/header.php');
-include('../components/sidebar.php');
 include('../components/koneksi.php');
 
 // Fetch counts
@@ -8,23 +7,21 @@ $count_employee = $conn->query("SELECT COUNT(*) AS count FROM Pegawai")->fetch_a
 $count_jobs = $conn->query("SELECT COUNT(*) AS count FROM Jabatan")->fetch_assoc()['count'];
 ?>
 
-<div class="container mt-5">
-    <h2>Dashboard</h2>
-    <div class="row">
-        <div class="col-md-6">
-            <div class="card text-white bg-primary mb-3">
-                <div class="card-body">
-                    <h5 class="card-title">Jumlah Pegawai</h5>
-                    <p class="card-text"><?php echo $count_employee; ?></p>
-                </div>
+<div class="flex flex-col lg:flex-row">
+    <div class="lg:w-1/5">
+        <?php include('../components/sidebar.php'); ?>
+    </div>
+
+    <div class="container mx-auto lg:w-4/5 p-4">
+        <h2 class="text-3xl font-bold mb-6">Dashboard</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-blue-500 text-white rounded-lg p-4">
+                <h5 class="text-xl font-semibold">Jumlah Pegawai</h5>
+                <p class="mt-2 text-lg"><?php echo $count_employee; ?></p>
             </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card text-white bg-success mb-3">
-                <div class="card-body">
-                    <h5 class="card-title">Jumlah Jabatan</h5>
-                    <p class="card-text"><?php echo $count_jobs; ?></p>
-                </div>
+            <div class="bg-green-500 text-white rounded-lg p-4">
+                <h5 class="text-xl font-semibold">Jumlah Jabatan</h5>
+                <p class="mt-2 text-lg"><?php echo $count_jobs; ?></p>
             </div>
         </div>
     </div>
