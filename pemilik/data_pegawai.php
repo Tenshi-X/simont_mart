@@ -13,11 +13,17 @@ if (isset($_GET['delete_id'])) {
     }
 }
 
-// Query untuk mendapatkan data pegawai
+$search = isset($_GET['search']) ? $_GET['search'] : '';
 $sql = "SELECT p.id_pegawai, p.nama_pegawai, j.nama_jabatan, p.alamat, p.tempat_lahir, p.tanggal_lahir, p.tgl_masuk_kerja, p.username, p.no_hp 
         FROM Pegawai p 
         JOIN Jabatan j ON p.id_jabatan = j.id_jabatan";
+
+if ($search) {
+    $sql .= " WHERE p.nama_pegawai LIKE '%$search%'";
+}
+
 $result = $conn->query($sql);
+
 ?>
 
 <div class="flex flex-col lg:flex-row">
@@ -27,6 +33,11 @@ $result = $conn->query($sql);
     </div>
     <div class="container mx-4  lg:w-4/5 py-4">
         <h2 class="text-2xl font-semibold mb-4">Data Pegawai</h2>
+        <form method="GET" class="mb-4">
+             <input type="text" name="search" placeholder="Cari Nama Pegawai" class="border p-2 rounded" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
+             <button type="submit" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Cari</button>
+        </form>
+
         <div class="overflow-x-auto">
             <table class="min-w-full bg-white border border-gray-300">
                 <thead class="bg-gray-200 text-sm">
