@@ -1,7 +1,9 @@
 <?php
 include('../components/header.php');
 include('../components/koneksi.php');
-
+$status = "";
+$alert_color = "";
+$redirect = false;
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id_jabatan = $_POST['id_jabatan'];
     $nama_pegawai = $_POST['nama_pegawai'];
@@ -17,9 +19,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             VALUES ('$id_jabatan', '$nama_pegawai', '$alamat', '$tempat_lahir', '$tanggal_lahir', '$tgl_masuk_kerja', '$username', '$password', '$no_hp')";
 
     if ($conn->query($sql) === TRUE) {
-        echo "Pegawai baru berhasil ditambahkan";
+        $status = "Pegawai baru berhasil ditambahkan";
+        $alert_color = "bg-green-100 border-green-400 text-green-700";
+        $redirect = true;
     } else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
+        $status = "Penambahan gagal";
+        $alert_color = "bg-red-100 border-red-400 text-red-700";
     }
 }
 
@@ -27,10 +32,33 @@ $jobs = $conn->query("SELECT * FROM Jabatan");
 ?>
 
 <div class="flex flex-col lg:flex-row">
-    <div class="lg:w-1/5">
+    <aside class="lg:w-1/5">
         <?php include('../components/sidebar.php'); ?>
-    </div>
+    </aside>
     <div class="container mx-auto lg:w-4/5 p-4 overflow-y-auto h-screen">
+        <?php if (!empty($status)): ?>
+        <div id="alert" class="hidden <?php echo $alert_color; ?> px-4 py-3 w-full rounded absolute top-0 left-0" role="alert">
+            <strong class="font-bold"><?php echo $status; ?></strong>
+        </div>
+        <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    const alert = document.getElementById("alert");
+                    alert.classList.remove("hidden");
+                    alert.classList.add("slide-down");
+
+                    setTimeout(() => {
+                        alert.classList.remove("slide-down");
+                        alert.classList.add("slide-up");
+
+                        setTimeout(() => {
+                            <?php if ($redirect): ?>
+                                window.location.href = "data_pegawai.php";
+                            <?php endif; ?>
+                        }, 300);
+                    }, 3000); 
+                });
+            </script>
+        <?php endif; ?>
         <h2 class="text-3xl font-bold mb-4">Tambah Pegawai</h2>
         <form action="" method="POST" class="max-w-3xl py-4 bg-white rounded-lg">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -80,5 +108,22 @@ $jobs = $conn->query("SELECT * FROM Jabatan");
 
     </div>
 </div>
+
+<style>
+    .slide-down {
+        animation: slideDown 0.2    s ease-out forwards;
+    }
+    .slide-up {
+        animation: slideUp 0.5s ease-in forwards;
+    }
+    @keyframes slideDown {
+        from { transform: translateY(-100%); }
+        to { transform: translateY(0); }
+    }
+    @keyframes slideUp {
+        from { transform: translateY(0); }
+        to { transform: translateY(-100%); }
+    }
+</style>
 
 <?php include('../components/footer.php'); ?>
