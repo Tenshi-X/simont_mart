@@ -23,9 +23,10 @@ function formatRupiah($number) {
             <table class="min-w-full bg-white border">
                 <thead>
                     <tr class="bg-gray-200">
-                        <th class="py-2 text-center w-28 ">ID Jabatan</th>
+                        <th class="py-2 text-center w-28">ID Jabatan</th>
                         <th class="py-2 text-center px-4">Nama Jabatan</th>
                         <th class="py-2 text-center px-4">Gaji Pokok</th>
+                        <th class="py-2 text-center px-4">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -35,11 +36,15 @@ function formatRupiah($number) {
                                 <td class="py-2 px-4 text-center"><?php echo $row['id_jabatan']; ?></td>
                                 <td class="py-2 px-4 text-center"><?php echo $row['nama_jabatan']; ?></td>
                                 <td class="py-2 px-4 text-center"><?php echo formatRupiah($row['gaji_pokok']); ?></td>
+                                <td class="py-2 px-4 text-center">
+                                    <a href="edit_jabatan.php?id=<?php echo $row['id_jabatan']; ?>" class="text-blue-500 hover:underline mr-2">Edit</a>
+                                    <a href="hapus_jabatan.php?id=<?php echo $row['id_jabatan']; ?>" class="text-red-500 hover:underline" onclick="return confirm('Anda yakin ingin menghapus jabatan ini?')">Delete</a>
+                                </td>
                             </tr>
                         <?php } ?>
                     <?php } else { ?>
                         <tr>
-                            <td colspan="3" class="py-2 px-4 border-b text-center">Belum ada data jabatan.</td>
+                            <td colspan="4" class="py-2 px-4 border-b text-center">Belum ada data jabatan.</td>
                         </tr>
                     <?php } ?>
                 </tbody>

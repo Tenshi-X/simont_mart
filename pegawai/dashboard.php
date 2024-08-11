@@ -110,6 +110,9 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 <?php endif; ?>
             </div>
         </div>
+        <div class="flex justify-end mt-6">
+    <a href="cetak_pdf.php" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Cetak PDF</a>
+    </div>
     </div>
 </div>
 <script>

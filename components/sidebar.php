@@ -29,9 +29,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <li>
                 <a href="tambah_gaji.php" class="block py-2 px-4 rounded <?php echo $current_page == 'tambah_gaji.php' || $current_page == 'kelola_gaji.php'? 'bg-gray-700' : ''; ?>">Penggajian</a>
             </li>
-            <li>
-                <a href="info_jam.php" class="block py-2 px-4 rounded <?php echo $current_page == 'info_jam.php' ? 'bg-gray-700' : ''; ?>">Jam Kerja</a>
-            </li>
         </ul>
     </nav>
     <div class="flex items-center justify-center h-16 bg-gray-800">

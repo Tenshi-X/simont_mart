@@ -13,21 +13,24 @@ $gaji_pokok = isset($_GET['gaji_pokok']) ? $_GET['gaji_pokok'] : '';
 $gaji_lembur = isset($_GET['gaji_lembur']) ? $_GET['gaji_lembur'] : '';
 $tot_bonus = isset($_GET['tot_bonus']) ? $_GET['tot_bonus'] : '';
 $tot_potongan = isset($_GET['tot_potongan']) ? $_GET['tot_potongan'] : '';
+$keterlambatan = isset($_GET['keterlambatan']) ? $_GET['keterlambatan'] : '';
 
 // Hitung total potongan tambahan jika kehadiran kurang dari 26 hari
 $potongan_kehadiran = 0;
 $potongan_kerugian = 0;
 $potongan_per_hari = 100000;
+$potongan_keterlambatan_per_jam = (($gaji_pokok / 26) / 9);
 
 if ($jumlah_hadir < 26) {
     $potongan_kehadiran = (26 - $jumlah_hadir) * $potongan_per_hari;
 }
 
+$potongan_keterlambatan = $potongan_keterlambatan_per_jam * $keterlambatan;
 // Ambil potongan kerugian barang dari input user
 $potongan_kerugian = ($gaji_pokok * ($tot_potongan / 100));
 
 // Perhitungan total potongan
-$tot_potongan_final = $potongan_kehadiran + $potongan_kerugian;
+$tot_potongan_final = $potongan_kehadiran + $potongan_kerugian + $potongan_keterlambatan;
 
 // Perhitungan total gaji setelah potongan
 $tot_gaji_final = $gaji_pokok - $tot_potongan_final + $gaji_lembur + $tot_bonus;
@@ -130,6 +133,10 @@ $employees = $conn->query("SELECT * FROM Pegawai");
                     <p class="mt-2 text-sm text-gray-600">
                         Potongan Kerugian Barang: Rp <?php echo number_format($potongan_kerugian, 0, ',', '.'); ?> 
                         (<?php echo $tot_potongan; ?>% dari gaji pokok)
+                    </p>
+                    <p class="mt-2 text-sm text-gray-600">
+                        Potongan keterlambatan: Rp <?php echo number_format($potongan_keterlambatan, 0, ',', '.'); ?> 
+                        (<?php echo $keterlambatan; ?> jam terlambat x Rp <?php echo number_format($potongan_keterlambatan_per_jam, 0, ',', '.'); ?> per jam)
                     </p>
                 </div>
 

@@ -13,6 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $jumlah_lembur = $_POST['jumlah_lembur'];
     $kerugian_barang = $_POST['kerugian_barang'];
     $tot_bonus = $_POST['tot_bonus'];
+    $keterlambatan = $_POST['keterlambatan'];
 
     // Hitung gaji_lembur
     $gaji_lembur = $jumlah_lembur * 50000;
@@ -28,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $tot_gaji = ($gaji_pokok * (100 - $tot_potongan) / 100) + $gaji_lembur + $tot_bonus;
 
     // Redirect ke halaman kelola_gaji.php untuk konfirmasi
-    header("Location: kelola_gaji.php?id_pegawai=$id_pegawai&jumlah_hadir=$jumlah_hadir&tgl_gaji=".date('Y-m-d')."&gaji_pokok=$gaji_pokok&gaji_lembur=$gaji_lembur&tot_bonus=$tot_bonus&tot_potongan=$tot_potongan&tot_gaji=$tot_gaji");
+    header("Location: kelola_gaji.php?id_pegawai=$id_pegawai&jumlah_hadir=$jumlah_hadir&tgl_gaji=".date('Y-m-d')."&gaji_pokok=$gaji_pokok&gaji_lembur=$gaji_lembur&tot_bonus=$tot_bonus&tot_potongan=$tot_potongan&tot_gaji=$tot_gaji&keterlambatan=$keterlambatan");
     exit;
 }
 
@@ -80,6 +81,10 @@ $employees = $conn->query("
                 <div>
                     <label for="tot_bonus" class="block text-sm font-medium text-gray-700">Jumlah Bonus</label>
                     <input type="number" id="tot_bonus" name="tot_bonus" class="mt-1 block w-full px-2 py-2 border border-black rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+                </div>
+                <div>
+                    <label for="keterlambatan" class="block text-sm font-medium text-gray-700">keterlambatan (dalam jam)</label>
+                    <input type="number" id="keterlambatan" name="keterlambatan" class="mt-1 block w-full px-2 py-2 border border-black rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
                 </div>
             </div>
             <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">

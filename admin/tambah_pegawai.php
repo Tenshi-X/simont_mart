@@ -4,6 +4,7 @@ include('../components/koneksi.php');
 $status = "";
 $alert_color = "";
 $redirect = false;
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id_jabatan = $_POST['id_jabatan'];
     $nama_pegawai = $_POST['nama_pegawai'];
@@ -15,16 +16,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST['password'];
     $no_hp = $_POST['no_hp'];
 
-    $sql = "INSERT INTO Pegawai (id_jabatan, nama_pegawai, alamat, tempat_lahir, tanggal_lahir, tgl_masuk_kerja, username, password, no_hp) 
-            VALUES ('$id_jabatan', '$nama_pegawai', '$alamat', '$tempat_lahir', '$tanggal_lahir', '$tgl_masuk_kerja', '$username', '$password', '$no_hp')";
+    // Cek apakah jabatan adalah kepala toko atau bendahara
+    if ($id_jabatan == 4 || $id_jabatan == 5) {
+        // Cek apakah jabatan ini sudah dimiliki oleh pegawai lain
+        $cek_jabatan = $conn->query("SELECT COUNT(*) as jumlah FROM Pegawai WHERE id_jabatan = $id_jabatan");
+        $result = $cek_jabatan->fetch_assoc();
 
-    if ($conn->query($sql) === TRUE) {
-        $status = "Pegawai baru berhasil ditambahkan";
-        $alert_color = "bg-green-100 border-green-400 text-green-700";
-        $redirect = true;
+        if ($result['jumlah'] > 0) {
+            // Jika sudah ada pegawai dengan jabatan tersebut, tampilkan pesan kesalahan
+            $status = "Gagal: Jabatan ini sudah diisi oleh pegawai lain.";
+            $alert_color = "bg-red-100 border-red-400 text-red-700";
+        } else {
+            // Jika belum, lanjutkan dengan penyimpanan data
+            $sql = "INSERT INTO Pegawai (id_jabatan, nama_pegawai, alamat, tempat_lahir, tanggal_lahir, tgl_masuk_kerja, username, password, no_hp) 
+                    VALUES ('$id_jabatan', '$nama_pegawai', '$alamat', '$tempat_lahir', '$tanggal_lahir', '$tgl_masuk_kerja', '$username', '$password', '$no_hp')";
+
+            if ($conn->query($sql) === TRUE) {
+                $status = "Pegawai baru berhasil ditambahkan";
+                $alert_color = "bg-green-100 border-green-400 text-green-700";
+                $redirect = true;
+            } else {
+                $status = "Penambahan gagal";
+                $alert_color = "bg-red-100 border-red-400 text-red-700";
+            }
+        }
     } else {
-        $status = "Penambahan gagal";
-        $alert_color = "bg-red-100 border-red-400 text-red-700";
+        // Untuk jabatan selain kepala toko dan bendahara, langsung simpan data
+        $sql = "INSERT INTO Pegawai (id_jabatan, nama_pegawai, alamat, tempat_lahir, tanggal_lahir, tgl_masuk_kerja, username, password, no_hp) 
+                VALUES ('$id_jabatan', '$nama_pegawai', '$alamat', '$tempat_lahir', '$tanggal_lahir', '$tgl_masuk_kerja', '$username', '$password', '$no_hp')";
+
+        if ($conn->query($sql) === TRUE) {
+            $status = "Pegawai baru berhasil ditambahkan";
+            $alert_color = "bg-green-100 border-green-400 text-green-700";
+            $redirect = true;
+        } else {
+            $status = "Penambahan gagal";
+            $alert_color = "bg-red-100 border-red-400 text-red-700";
+        }
     }
 }
 

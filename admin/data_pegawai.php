@@ -1,7 +1,17 @@
 <?php
 include('../components/header.php');
-
 include('../components/koneksi.php');
+
+// Fungsi untuk menghapus pegawai
+if (isset($_GET['delete_id'])) {
+    $id_pegawai = $_GET['delete_id'];
+    $sql_delete = "DELETE FROM Pegawai WHERE id_pegawai = '$id_pegawai'";
+    if ($conn->query($sql_delete) === TRUE) {
+        header("Location: data_pegawai.php");
+    } else {
+        echo "Error deleting record: " . $conn->error;
+    }
+}
 
 // Query untuk mendapatkan data pegawai
 $sql = "SELECT p.id_pegawai, p.nama_pegawai, j.nama_jabatan, p.alamat, p.tempat_lahir, p.tanggal_lahir, p.tgl_masuk_kerja, p.username, p.no_hp 
@@ -30,6 +40,7 @@ $result = $conn->query($sql);
                         <th class="px-4 py-2 text-center border-b">Tanggal Masuk Kerja</th>
                         <th class="px-4 py-2 text-center border-b">Username</th>
                         <th class="px-4 py-2 text-center border-b">No HP</th>
+                        <th class="px-4 py-2 text-center border-b">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -45,11 +56,15 @@ $result = $conn->query($sql);
                                 <td class="px-4 py-2 border-b"><?php echo $row['tgl_masuk_kerja']; ?></td>
                                 <td class="px-4 py-2 border-b"><?php echo $row['username']; ?></td>
                                 <td class="px-4 py-2 border-b"><?php echo $row['no_hp']; ?></td>
+                                <td class="px-4 py-2 border-b">
+                                    <a href="edit_pegawai.php?id=<?php echo $row['id_pegawai']; ?>" class="bg-yellow-400 text-white px-2 py-1 rounded hover:bg-yellow-500">Edit</a>
+                                    <a href="data_pegawai.php?delete_id=<?php echo $row['id_pegawai']; ?>" onclick="return confirm('Apakah Anda yakin ingin menghapus pegawai ini?');" class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">Delete</a>
+                                </td>
                             </tr>
                         <?php } ?>
                     <?php } else { ?>
                         <tr>
-                            <td colspan="9" class="text-center px-4 py-2 border-b">Belum ada data pegawai.</td>
+                            <td colspan="10" class="text-center px-4 py-2 border-b">Belum ada data pegawai.</td>
                         </tr>
                     <?php } ?>
                 </tbody>
