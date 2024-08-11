@@ -23,7 +23,7 @@ $result = $conn->query($sql);
 <div class="flex flex-col lg:flex-row">
         
     <div class="lg:w-1/5">
-        <?php include('sidebar.php'); ?>
+        <?php include('../components/sidebar.php'); ?>
     </div>
     <div class="container mx-auto lg:w-4/5 py-4">
         <h2 class="text-2xl font-semibold mb-4">Data Pegawai</h2>
