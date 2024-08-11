@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 11, 2024 at 10:17 AM
+-- Generation Time: Aug 11, 2024 at 10:15 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -44,6 +44,27 @@ INSERT INTO `admin` (`id_admin`, `username`, `password`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `bonus`
+--
+
+CREATE TABLE `bonus` (
+  `id_bonus` int(11) NOT NULL,
+  `nama_bonus` varchar(50) NOT NULL,
+  `jumlah_bonus` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `bonus`
+--
+
+INSERT INTO `bonus` (`id_bonus`, `nama_bonus`, `jumlah_bonus`) VALUES
+(1, 'bonus kinerja', 100000),
+(2, 'bonus jabatan kepala toko', 250000),
+(3, 'bonus jabatan bendahara', 200000);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `gaji`
 --
 
@@ -70,7 +91,9 @@ INSERT INTO `gaji` (`id_gaji`, `id_pegawai`, `jumlah_hadir`, `tgl_gaji`, `gaji_p
 (13, 3, '21', '2024-08-11 14:51:27', 3300000, 150000, 200000, 500000, 3150000),
 (14, 4, '23', '2024-08-11 14:55:15', 2800000, 150000, 200000, 300000, 2850000),
 (15, 4, '23', '2024-08-11 14:55:33', 2800000, 150000, 200000, 300000, 2850000),
-(16, 4, '21', '2024-08-11 14:55:59', 2800000, 150000, 2, 500000, 2450002);
+(16, 4, '21', '2024-08-11 14:55:59', 2800000, 150000, 2, 500000, 2450002),
+(18, 4, '23', '2024-08-11 18:36:15', 2800000, 200000, 50000, 720000, 2330000),
+(19, 4, '23', '2024-08-12 03:07:46', 2800000, 200000, 33333, 347863, 2685470);
 
 -- --------------------------------------------------------
 
@@ -97,29 +120,6 @@ INSERT INTO `jabatan` (`id_jabatan`, `nama_jabatan`, `gaji_pokok`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `jam`
---
-
-CREATE TABLE `jam` (
-  `id_jam` int(11) NOT NULL,
-  `jam` varchar(50) NOT NULL,
-  `nama_jam_kerja` varchar(50) NOT NULL,
-  `keterangan` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `jam`
---
-
-INSERT INTO `jam` (`id_jam`, `jam`, `nama_jam_kerja`, `keterangan`) VALUES
-(1, '08:00', 'Absen Masuk', 'Digunakan sebagai max absen masuk, jika absen melebihi jam tersebut maka absen tidak bisa di lakukan dan di anggap tidak masuk kerja'),
-(2, '16:59', 'Absen Keluar', 'Digunakan sebagai absen keluar, absen keluar harus melebihi jam tersebut'),
-(3, '17:00', 'Lembur Masuk', 'Digunakan sebagai lembur masuk, absen lembur masuk harus melebihi jam 17:00'),
-(4, '19:00', 'Lembur Keluar', 'Digunakan sebagai lembur keluar, absen lembur keluar harus melebihi jam 19:00');
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `pegawai`
 --
 
@@ -141,9 +141,33 @@ CREATE TABLE `pegawai` (
 --
 
 INSERT INTO `pegawai` (`id_pegawai`, `id_jabatan`, `nama_pegawai`, `alamat`, `tempat_lahir`, `tanggal_lahir`, `tgl_masuk_kerja`, `username`, `password`, `no_hp`) VALUES
-(3, 4, 'jokowi', 'jakarta', 'solo', '2024-08-01', '2024-08-08', 'awikwok', 'jokowi123', '2147483647'),
-(4, 5, 'prabowo', 'jakarta', 'jakarta', '2024-08-01', '2024-08-11', 'gedagedi', 'gibran123', '2147483647'),
-(7, 7, 'amin', 'solo', 'solo', '2024-08-14', '2024-08-15', 'amin', 'palingserius', '08746626462');
+(3, 4, 'jokowi', 'jakarta', 'solo', '2024-08-08', '2024-08-08', 'awikwok', 'jokowi123', '2147483647'),
+(4, 5, 'prabowo', 'jakarta', 'jakarta', '2024-08-01', '2024-08-11', 'gedagedi', 'gibran123', '2147483647');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `potongan`
+--
+
+CREATE TABLE `potongan` (
+  `id_potongan` int(11) NOT NULL,
+  `nama_potongan` varchar(50) NOT NULL,
+  `nilai_potongan` int(11) NOT NULL,
+  `keterangan` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `potongan`
+--
+
+INSERT INTO `potongan` (`id_potongan`, `nama_potongan`, `nilai_potongan`, `keterangan`) VALUES
+(1, 'tidak hadir', 100000, 'per hari'),
+(2, 'kerugian barang', 15, 'dalam persen'),
+(3, 'keterlambatan kepala toko', 14102, 'per jam'),
+(4, 'keterlambatan bendahara', 11965, 'per jam'),
+(5, 'keterlambatan kasir', 11111, 'per jam'),
+(6, 'keterlambatan pramuniaga', 10256, 'per jam');
 
 --
 -- Indexes for dumped tables
@@ -154,6 +178,12 @@ INSERT INTO `pegawai` (`id_pegawai`, `id_jabatan`, `nama_pegawai`, `alamat`, `te
 --
 ALTER TABLE `admin`
   ADD PRIMARY KEY (`id_admin`);
+
+--
+-- Indexes for table `bonus`
+--
+ALTER TABLE `bonus`
+  ADD PRIMARY KEY (`id_bonus`);
 
 --
 -- Indexes for table `gaji`
@@ -169,17 +199,17 @@ ALTER TABLE `jabatan`
   ADD PRIMARY KEY (`id_jabatan`);
 
 --
--- Indexes for table `jam`
---
-ALTER TABLE `jam`
-  ADD PRIMARY KEY (`id_jam`);
-
---
 -- Indexes for table `pegawai`
 --
 ALTER TABLE `pegawai`
   ADD PRIMARY KEY (`id_pegawai`),
   ADD KEY `fk_jabatan_pegawai` (`id_jabatan`);
+
+--
+-- Indexes for table `potongan`
+--
+ALTER TABLE `potongan`
+  ADD PRIMARY KEY (`id_potongan`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -192,10 +222,16 @@ ALTER TABLE `admin`
   MODIFY `id_admin` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
+-- AUTO_INCREMENT for table `bonus`
+--
+ALTER TABLE `bonus`
+  MODIFY `id_bonus` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `gaji`
 --
 ALTER TABLE `gaji`
-  MODIFY `id_gaji` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id_gaji` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `jabatan`
@@ -204,16 +240,16 @@ ALTER TABLE `jabatan`
   MODIFY `id_jabatan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
--- AUTO_INCREMENT for table `jam`
---
-ALTER TABLE `jam`
-  MODIFY `id_jam` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
 -- AUTO_INCREMENT for table `pegawai`
 --
 ALTER TABLE `pegawai`
   MODIFY `id_pegawai` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `potongan`
+--
+ALTER TABLE `potongan`
+  MODIFY `id_potongan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Constraints for dumped tables
