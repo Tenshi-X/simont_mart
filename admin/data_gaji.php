@@ -20,6 +20,16 @@ function potongNama($nama, $maxLength = 20) {
     }
 }
 
+if (isset($_GET['delete_id'])) {
+    $id_gaji = $_GET['delete_id'];
+    $sql_delete = "DELETE FROM Gaji WHERE id_gaji = '$id_gaji'";
+    if ($conn->query($sql_delete) === TRUE) {
+        header("Location: data_gaji.php");
+    } else {
+        echo "Error deleting record: " . $conn->error;
+    }
+}
+
 if (isset($_GET['status']) && isset($_GET['message'])) {
     $status = $_GET['status'];
     $message = urldecode($_GET['message']);
@@ -60,7 +70,7 @@ if (isset($_GET['status']) && isset($_GET['message'])) {
                 });
             </script>
         <?php endif; ?>
-        <h2 class="text-2xl font-semibold mb-4">Data Gaji</h2>
+        <h2 class="text-3xl font-semibold mb-4">Data Gaji</h2>
 
         <div class="overflow-x-auto pr-4">
             <table class="min-w-full bg-white border border-gray-300">
@@ -75,6 +85,7 @@ if (isset($_GET['status']) && isset($_GET['message'])) {
                         <th class="py-1 text-center py-2 px-2">Total Bonus</th>
                         <th class="py-1 text-center py-2 px-2">Total Potongan</th>
                         <th class="py-1 text-center py-2 px-2">Total Gaji</th>
+                        <th class="px-2 py-1 text-center border-b">Action</th>
                     </tr>
                 </thead>
                 <tbody class="text-sm">
@@ -90,6 +101,10 @@ if (isset($_GET['status']) && isset($_GET['message'])) {
                                 <td class="py-2 px-2 text-center"><?php echo formatRupiah($row['tot_bonus']); ?></td>
                                 <td class="py-2 px-2 text-center"><?php echo formatRupiah($row['tot_potongan']); ?></td>
                                 <td class="py-2 px-2 font-semibold text-center"><?php echo formatRupiah($row['tot_gaji']); ?></td>
+                                <td class="px-2 py-1 border-b flex justify-center space-x-2">
+                                    <a href="edit_gaji.php?id=<?php echo $row['id_gaji']; ?>" class="bg-blue-400 text-white px-2 py-1 rounded text-xs hover:bg-blue-500">Edit</a>
+                                    <a href="data_gaji.php?delete_id=<?php echo $row['id_gaji']; ?>" onclick="return confirm('Apakah Anda yakin ingin menghapus data gaji ini?');" class="bg-red-500 text-white px-2 py-1 rounded text-xs hover:bg-red-600">Delete</a>
+                                </td>
                             </tr>
                         <?php } ?>
                     <?php } else { ?>

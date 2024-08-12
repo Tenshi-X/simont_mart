@@ -20,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Hitung tot_potongan
     if ($kerugian_barang >= 120000) {
-        $tot_potongan = 15;
+        $tot_potongan = (15*$kerugian_barang)/100;
     } else {
         $tot_potongan = 0;
     }

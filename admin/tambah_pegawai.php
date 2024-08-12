@@ -139,7 +139,7 @@ $jobs = $conn->query("SELECT * FROM Jabatan");
 
 <style>
     .slide-down {
-        animation: slideDown 0.2    s ease-out forwards;
+        animation: slideDown 0.2s ease-out forwards;
     }
     .slide-up {
         animation: slideUp 0.5s ease-in forwards;
@@ -153,5 +153,16 @@ $jobs = $conn->query("SELECT * FROM Jabatan");
         to { transform: translateY(-100%); }
     }
 </style>
+<script>
+    const today = new Date();
+    const minYear = today.getFullYear() - 35;
+    const maxYear = today.getFullYear() - 20;
+    const minDate = new Date(minYear, today.getMonth(), today.getDate()).toISOString().split('T')[0];
+    const maxDate = new Date(maxYear, today.getMonth(), today.getDate()).toISOString().split('T')[0];
+    const dateInput = document.getElementById('tanggal_lahir');
+    dateInput.setAttribute('min', minDate);
+    dateInput.setAttribute('max', maxDate);
+    
+</script>
 
 <?php include('../components/footer.php'); ?>

@@ -5,10 +5,11 @@ include('../components/koneksi.php');
 // Set timezone ke GMT+7
 date_default_timezone_set('Asia/Jakarta');
 
-// Tangkap data yang dikirim dari tambah_gaji.php
+// Tangkap data yang dikirim dari edit_gaji.php
+$id_gaji = isset($_GET['id_gaji']) ? $_GET['id_gaji'] : '';
 $id_pegawai = isset($_GET['id_pegawai']) ? $_GET['id_pegawai'] : '';
 $jumlah_hadir = isset($_GET['jumlah_hadir']) ? $_GET['jumlah_hadir'] : '';
-$tgl_gaji = date('Y-m-d H:i:s'); // Otomatis dengan waktu sekarang di GMT+7
+$tgl_gaji = date('Y-m-d H:i:s');
 $gaji_pokok = isset($_GET['gaji_pokok']) ? $_GET['gaji_pokok'] : '';
 $gaji_lembur = isset($_GET['gaji_lembur']) ? $_GET['gaji_lembur'] : '';
 $tot_bonus = isset($_GET['tot_bonus']) ? $_GET['tot_bonus'] : '';
@@ -26,6 +27,8 @@ if ($jumlah_hadir < 26) {
 }
 
 $potongan_keterlambatan = $potongan_keterlambatan_per_jam * $keterlambatan;
+// Ambil potongan kerugian barang dari input user
+
 // Perhitungan total potongan
 $tot_potongan_final = $potongan_kehadiran + $potongan_kerugian + $potongan_keterlambatan;
 
@@ -45,8 +48,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $tot_potongan = $_POST['tot_potongan'];
     $tot_gaji = $_POST['tot_gaji'];
 
-    $sql = "INSERT INTO Gaji (id_pegawai, jumlah_hadir, tgl_gaji, gaji_pokok, gaji_lembur, tot_bonus, tot_potongan, tot_gaji) 
-            VALUES ('$id_pegawai', '$jumlah_hadir', '$tgl_gaji', '$gaji_pokok', '$gaji_lembur', '$tot_bonus', '$tot_potongan_final', '$tot_gaji')";
+    $sql = "UPDATE Gaji SET 
+                        id_pegawai = '$id_pegawai', 
+                        jumlah_hadir = '$jumlah_hadir', 
+                        tgl_gaji = '$tgl_gaji', 
+                        gaji_pokok = '$gaji_pokok', 
+                        gaji_lembur = '$gaji_lembur', 
+                        tot_bonus = '$tot_bonus', 
+                        tot_potongan = '$tot_potongan', 
+                        tot_gaji = '$tot_gaji'
+                    WHERE id_gaji = '$id_gaji'";
     if ($conn->query($sql) === TRUE) {
         $status = "Pencatatan berhasil";
         $alert_color = "bg-green-100 border-green-400 text-green-700";
@@ -89,7 +100,7 @@ $employees = $conn->query("SELECT * FROM Pegawai");
         });
     </script>
     <?php endif; ?>
-        <h2 class="text-2xl font-bold mb-6">Konfirmasi Pencatatan Penggajian</h2>
+        <h2 class="text-2xl font-bold mb-6">Konfirmasi Edit Pencatatan Penggajian</h2>
         
         <form action="" method="POST" class="max-w-3xl py-4 bg-white rounded-lg">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
