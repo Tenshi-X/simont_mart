@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.1.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 11, 2024 at 10:15 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Generation Time: Aug 12, 2024 at 02:03 AM
+-- Server version: 10.4.21-MariaDB
+-- PHP Version: 8.0.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -31,7 +31,7 @@ CREATE TABLE `admin` (
   `id_admin` int(11) NOT NULL,
   `username` varchar(50) NOT NULL,
   `password` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `admin`
@@ -51,16 +51,17 @@ CREATE TABLE `bonus` (
   `id_bonus` int(11) NOT NULL,
   `nama_bonus` varchar(50) NOT NULL,
   `jumlah_bonus` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `bonus`
 --
 
 INSERT INTO `bonus` (`id_bonus`, `nama_bonus`, `jumlah_bonus`) VALUES
-(1, 'bonus kinerja', 100000),
-(2, 'bonus jabatan kepala toko', 250000),
-(3, 'bonus jabatan bendahara', 200000);
+(1, 'Tidak Ada Bonus', 0),
+(2, 'Bonus Kinerja', 100000),
+(3, 'Bonus Jabatan Kepala Toko', 250000),
+(4, 'Bonus Jabatan Bendahara', 200000);
 
 -- --------------------------------------------------------
 
@@ -78,7 +79,7 @@ CREATE TABLE `gaji` (
   `tot_bonus` int(11) NOT NULL,
   `tot_potongan` int(11) NOT NULL,
   `tot_gaji` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `gaji`
@@ -86,7 +87,6 @@ CREATE TABLE `gaji` (
 
 INSERT INTO `gaji` (`id_gaji`, `id_pegawai`, `jumlah_hadir`, `tgl_gaji`, `gaji_pokok`, `gaji_lembur`, `tot_bonus`, `tot_potongan`, `tot_gaji`) VALUES
 (10, 3, '21', '2024-08-11 02:13:44', 3300000, 150000, 200000, 995000, 2655000),
-(11, 3, '25', '2024-08-11 02:14:15', 3300000, 200000, 200000, 595000, 3105000),
 (12, 3, '21', '2024-08-11 13:55:01', 3300000, 200000, 200000, 995000, 2705000),
 (13, 3, '21', '2024-08-11 14:51:27', 3300000, 150000, 200000, 500000, 3150000),
 (14, 4, '23', '2024-08-11 14:55:15', 2800000, 150000, 200000, 300000, 2850000),
@@ -105,7 +105,7 @@ CREATE TABLE `jabatan` (
   `id_jabatan` int(11) NOT NULL,
   `nama_jabatan` varchar(50) NOT NULL,
   `gaji_pokok` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `jabatan`
@@ -134,7 +134,7 @@ CREATE TABLE `pegawai` (
   `username` varchar(50) NOT NULL,
   `password` varchar(50) NOT NULL,
   `no_hp` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `pegawai`
@@ -155,7 +155,7 @@ CREATE TABLE `potongan` (
   `nama_potongan` varchar(50) NOT NULL,
   `nilai_potongan` int(11) NOT NULL,
   `keterangan` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `potongan`
@@ -225,7 +225,7 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `bonus`
 --
 ALTER TABLE `bonus`
-  MODIFY `id_bonus` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_bonus` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `gaji`
@@ -259,7 +259,7 @@ ALTER TABLE `potongan`
 -- Constraints for table `gaji`
 --
 ALTER TABLE `gaji`
-  ADD CONSTRAINT `fk_pegawai_gaji` FOREIGN KEY (`id_pegawai`) REFERENCES `pegawai` (`id_pegawai`);
+  ADD CONSTRAINT `fk_pegawai_gaji` FOREIGN KEY (`id_pegawai`) REFERENCES `pegawai` (`id_pegawai`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `pegawai`
