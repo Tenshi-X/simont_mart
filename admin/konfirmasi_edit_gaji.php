@@ -41,7 +41,7 @@ $redirect = false;
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id_pegawai = $_POST['id_pegawai'];
     $jumlah_hadir = $_POST['jumlah_hadir'];
-    $tgl_gaji = date('Y-m-d H:i:s');
+    $tgl_gaji = $_POST['tgl_gaji'];
     $gaji_pokok = $_POST['gaji_pokok'];
     $gaji_lembur = $_POST['gaji_lembur'];
     $tot_bonus = $_POST['tot_bonus'];
@@ -101,7 +101,6 @@ $employees = $conn->query("SELECT * FROM Pegawai");
     </script>
     <?php endif; ?>
         <h2 class="text-2xl font-bold mb-6">Konfirmasi Edit Pencatatan Penggajian</h2>
-        
         <form action="" method="POST" class="max-w-3xl py-4 bg-white rounded-lg">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="mb-1">
@@ -133,6 +132,10 @@ $employees = $conn->query("SELECT * FROM Pegawai");
                     <input type="text" id="tot_bonus_display" class="block w-full px-2 py-2 border border-black rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="<?php echo 'Rp ' . number_format($tot_bonus, 0, ',', '.'); ?>" readonly required>
                     <input type="hidden" id="tot_bonus" name="tot_bonus" value="<?php echo $tot_bonus; ?>">
                 </div>
+                <div>
+                    <label for="tgl_gaji" class="block text-sm font-medium text-gray-700">Tanggal Gaji</label>
+                    <input type="hidden" id="tgl_gaji" name="tgl_gaji" value="<?php echo $tgl_gaji; ?>">
+                </div>
                 <div class="mb-1 col-span-2">
                     <label for="tot_potongan" class="block text-sm font-medium text-gray-700">Total Potongan (Rp)</label>
                     <input type="text" id="tot_potongan_display" class="block w-full px-2 py-2 border border-black rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="<?php echo 'Rp ' . number_format($tot_potongan_final, 0, ',', '.'); ?>" readonly required>
@@ -157,7 +160,6 @@ $employees = $conn->query("SELECT * FROM Pegawai");
                     <input type="text" id="tot_gaji_display" class="block w-full px-2 py-2 border border-black rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="<?php echo 'Rp ' . number_format($tot_gaji_final, 0, ',', '.'); ?>" readonly required>
                     <input type="hidden" id="tot_gaji" name="tot_gaji" value="<?php echo $tot_gaji_final; ?>">
                 </div>
-
             </div>
             <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 Submit
