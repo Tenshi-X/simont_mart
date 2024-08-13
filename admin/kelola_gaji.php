@@ -38,7 +38,7 @@ $redirect = false;
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id_pegawai = $_POST['id_pegawai'];
     $jumlah_hadir = $_POST['jumlah_hadir'];
-    $tgl_gaji = date('Y-m-d H:i:s');
+    $tgl_gaji = isset($_GET['tgl_gaji']) ? $_GET['tgl_gaji'] . ' ' . date('H:i:s') : date('Y-m-d H:i:s');
     $gaji_pokok = $_POST['gaji_pokok'];
     $gaji_lembur = $_POST['gaji_lembur'];
     $tot_bonus = $_POST['tot_bonus'];

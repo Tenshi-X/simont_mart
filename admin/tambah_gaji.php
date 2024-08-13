@@ -14,6 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $kerugian_barang = $_POST['kerugian_barang'];
     $tot_bonus = $_POST['tot_bonus'];
     $keterlambatan = $_POST['keterlambatan'];
+    $tgl_gaji_manual = $_POST['tgl_gaji_manual'];
 
     // Hitung gaji_lembur
     $gaji_lembur = $jumlah_lembur * 50000;
@@ -29,7 +30,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $tot_gaji = ($gaji_pokok * (100 - $tot_potongan) / 100) + $gaji_lembur + $tot_bonus;
 
     // Redirect ke halaman kelola_gaji.php untuk konfirmasi
-    header("Location: kelola_gaji.php?id_pegawai=$id_pegawai&jumlah_hadir=$jumlah_hadir&tgl_gaji=".date('Y-m-d')."&gaji_pokok=$gaji_pokok&gaji_lembur=$gaji_lembur&tot_bonus=$tot_bonus&tot_potongan=$tot_potongan&tot_gaji=$tot_gaji&keterlambatan=$keterlambatan");
+    header("Location: kelola_gaji.php?id_pegawai=$id_pegawai&jumlah_hadir=$jumlah_hadir&tgl_gaji=$tgl_gaji_manual&gaji_pokok=$gaji_pokok&gaji_lembur=$gaji_lembur&tot_bonus=$tot_bonus&tot_potongan=$tot_potongan&tot_gaji=$tot_gaji&keterlambatan=$keterlambatan");
+
     exit;
 }
 
@@ -96,6 +98,10 @@ $bonuses = $conn->query("SELECT id_bonus, nama_bonus, jumlah_bonus FROM bonus");
                 <div>
                     <label for="keterlambatan" class="block text-sm font-medium text-gray-700">Keterlambatan (dalam jam)</label>
                     <input type="number" id="keterlambatan" name="keterlambatan" class="mt-1 block w-full px-2 py-2 border border-black rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+                </div>
+                <div>
+                    <label for="tgl_gaji_manual" class="block text-sm font-medium text-gray-700">Tanggal Gaji</label>
+                    <input type="date" id="tgl_gaji_manual" name="tgl_gaji_manual" class="mt-1 block w-full px-2 py-2 border border-black rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
                 </div>
             </div>
             <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">

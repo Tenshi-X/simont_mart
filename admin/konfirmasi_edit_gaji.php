@@ -9,7 +9,7 @@ date_default_timezone_set('Asia/Jakarta');
 $id_gaji = isset($_GET['id_gaji']) ? $_GET['id_gaji'] : '';
 $id_pegawai = isset($_GET['id_pegawai']) ? $_GET['id_pegawai'] : '';
 $jumlah_hadir = isset($_GET['jumlah_hadir']) ? $_GET['jumlah_hadir'] : '';
-$tgl_gaji = date('Y-m-d H:i:s');
+$tgl_gaji = isset($_GET['tgl_gaji']) ? $_GET['tgl_gaji'] . ' ' . date('H:i:s') : date('Y-m-d H:i:s');
 $gaji_pokok = isset($_GET['gaji_pokok']) ? $_GET['gaji_pokok'] : '';
 $gaji_lembur = isset($_GET['gaji_lembur']) ? $_GET['gaji_lembur'] : '';
 $tot_bonus = isset($_GET['tot_bonus']) ? $_GET['tot_bonus'] : '';
