@@ -26,7 +26,12 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <li>
                 <a href="data_jabatan.php" class="block py-2 px-4 rounded <?php echo $current_page == 'data_jabatan.php' || $current_page == 'tambah_jabatan.php' ? 'bg-gray-700' : ''; ?>">Data Jabatan</a>
             </li>
-            <!-- Penggajian Dropdown -->
+            <li>
+                <a href="data_bonus.php" class="block py-2 px-4 rounded <?php echo $current_page == 'data_bonus.php' || $current_page == 'tambah_bonus.php' ? 'bg-gray-700' : ''; ?>">Data Bonus</a>
+            </li>
+            <li>
+                <a href="data_potongan.php" class="block py-2 px-4 rounded <?php echo $current_page == 'data_potongan.php' || $current_page == 'tambah_potongan.php' ? 'bg-gray-700' : ''; ?>">Data potongan</a>
+            </li>
             <li>
                 <button id="dropdown-btn" class="w-full text-left block py-2 px-4 rounded focus:outline-none">
                     Penggajian

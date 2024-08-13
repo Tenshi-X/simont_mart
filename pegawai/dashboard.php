@@ -73,7 +73,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <nav class="flex-grow">
             <ul class="flex flex-col space-y-2 p-4">
                 <li>
-                    <a href="rincian_pegawai.php" class="block py-2 px-4 rounded <?php echo $current_page == 'dashboard.php' ? 'bg-gray-700' : ''; ?>">Rincian Pegawai</a>
+                    <a href="dashboard.php" class="block py-2 px-4 rounded <?php echo $current_page == 'dashboard.php' ? 'bg-gray-700' : ''; ?>">Rincian Pegawai</a>
                 </li>
             </ul>
         </nav>
