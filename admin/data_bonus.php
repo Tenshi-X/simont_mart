@@ -50,8 +50,6 @@ function formatRupiah($number) {
             </script>
         <?php endif; ?>
         <h2 class="text-2xl font-semibold mb-4">Data Bonus</h2>
-        <a href="tambah_bonus.php" class="bg-blue-500 text-white px-3 py-2 rounded mb-3 inline-block hover:bg-blue-600 text-sm">Tambah Bonus</a>
-
         <div class="overflow-x-auto">
             <table class="min-w-full bg-white border border-gray-300">
                 <thead class="bg-gray-200 text-sm">
@@ -59,7 +57,6 @@ function formatRupiah($number) {
                         <th class="py-1 text-center w-24">ID Bonus</th>
                         <th class="py-1 text-center px-2">Nama Bonus</th>
                         <th class="py-1 text-center px-2">Jumlah Bonus</th>
-                        <th class="py-1 text-center px-2">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="text-sm">
@@ -69,10 +66,6 @@ function formatRupiah($number) {
                                 <td class="py-2 px-2 text-center"><?php echo $row['id_bonus']; ?></td>
                                 <td class="py-2 px-2 text-center"><?php echo $row['nama_bonus']; ?></td>
                                 <td class="py-2 px-2 text-center"><?php echo formatRupiah($row['jumlah_bonus']); ?></td>
-                                <td class="py-2 px-2 text-center">
-                                    <a href="edit_bonus.php?id=<?php echo $row['id_bonus']; ?>" class="bg-blue-400 text-white px-2 py-1 rounded text-xs hover:bg-blue-500">Edit</a>
-                                    <a href="hapus_bonus.php?id=<?php echo $row['id_bonus']; ?>" class="bg-red-500 text-white px-2 py-1 rounded text-xs hover:bg-red-600" onclick="return confirm('Anda yakin ingin menghapus bonus ini?')">Delete</a>
-                                </td>
                             </tr>
                         <?php } ?>
                     <?php } else { ?>

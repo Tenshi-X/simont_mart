@@ -20,10 +20,39 @@ $potongan_kehadiran = 0;
 $potongan_kerugian = $tot_potongan;
 $potongan_per_hari = 100000;
 $potongan_keterlambatan_per_jam = (($gaji_pokok / 26) / 9);
+$id_gaji = 23;
 
 if ($jumlah_hadir < 26) {
     $potongan_kehadiran = (26 - $jumlah_hadir) * $potongan_per_hari;
 }
+
+if($potongan_kehadiran!= 0){
+    $id_tidak_hadir = 7;
+}
+else{
+    $id_tidak_hadir = NULL;
+}
+
+if($potongan_keterlambatan_per_jam == 14102){
+    $id_keterlambatan = 3;
+}
+else if($potongan_keterlambatan_per_jam == 11965){
+    $id_keterlambatan = 4;
+}
+else if($potongan_keterlambatan_per_jam == 11111){
+    $id_keterlambatan = 5;
+}
+else{
+    $id_keterlambatan = 6;
+}
+
+if($tot_potongan != 0){
+    $id_kerugian = 2;
+}
+else{
+    $id_kerugian = NULL;
+}
+    
 
 $potongan_keterlambatan = $potongan_keterlambatan_per_jam * $keterlambatan;
 // Perhitungan total potongan
@@ -55,6 +84,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $status = "Pencatatan gagal";
         $alert_color = "bg-red-100 border-red-400 text-red-700";
     }
+    $conn->query("INSERT INTO gaji_potongan(id_gaji, id_potongan, tgl_gaji) 
+    VALUES ('$id_gaji','$id_kerugian', '$tgl_gaji'),
+           ('$id_gaji','$id_keterlambatan', '$tgl_gaji'),
+           ('$id_gaji','$id_tidak_hadir', '$tgl_gaji')");
+    $id_gaji++;
 }
 
 $employees = $conn->query("SELECT * FROM Pegawai");
