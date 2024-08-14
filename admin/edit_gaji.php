@@ -68,7 +68,7 @@ if (isset($_GET['id'])) {
     exit;
 }
 $bonus_kinerja = $conn->query("SELECT id_bonus, nama_bonus, jumlah_bonus FROM bonus WHERE id_bonus = 2 OR id_bonus = 5");
-$bonus_jabatan = $conn->query("SELECT id_bonus, nama_bonus, jumlah_bonus FROM bonus WHERE id_bonus = 3 OR id_bonus = 4");
+$bonus_jabatan = $conn->query("SELECT id_bonus, nama_bonus, jumlah_bonus FROM bonus WHERE id_bonus = 3 OR id_bonus = 4 OR id_bonus = 5");
 
 
 ?>

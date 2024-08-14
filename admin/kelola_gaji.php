@@ -23,6 +23,13 @@ $potongan_kerugian = $tot_potongan;
 $potongan_per_hari = 100000;
 $potongan_keterlambatan_per_jam = (($gaji_pokok / 26) / 9);
 
+if($tot_potongan != 0){
+    $presentase = 15;
+}
+else{
+    $presentase = 0;
+}
+
 if ($jumlah_hadir < 26) {
     $potongan_kehadiran = (26 - $jumlah_hadir) * $potongan_per_hari;
 }
@@ -57,8 +64,11 @@ if($bonus_kinerja != 0){
 
 if($bonus_jabatan == 250000){
     $id_bonus_jabatan = 3;
-} else {
+} else if($bonus_jabatan == 200000) {
     $id_bonus_jabatan = 4;
+}
+else{
+    $id_bonus_jabatan = 5;
 }
 
 $potongan_keterlambatan = $potongan_keterlambatan_per_jam * $keterlambatan;
@@ -197,7 +207,7 @@ $employees = $conn->query("SELECT * FROM Pegawai");
                     </p>
                     <p class="mt-2 text-sm text-gray-600">
                         Potongan Kerugian Barang: Rp <?php echo number_format($potongan_kerugian, 0, ',', '.'); ?> 
-                        (<?php echo $tot_potongan; ?>% dari gaji pokok)
+                        (<?php echo $presentase ?>% dari kerugian barang)
                     </p>
                     <p class="mt-2 text-sm text-gray-600">
                         Potongan keterlambatan: Rp <?php echo number_format($potongan_keterlambatan, 0, ',', '.'); ?> 
