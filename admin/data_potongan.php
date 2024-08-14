@@ -56,7 +56,7 @@ function formatRupiah($number) {
             <table class="min-w-full bg-white border border-gray-300">
                 <thead class="bg-gray-200 text-sm">
                     <tr>
-                        <th class="py-1 text-center w-24">ID Potongan</th>
+                        <th class="py-1 text-center w-24">ID</th>
                         <th class="py-1 text-center px-2">Nama Potongan</th>
                         <th class="py-1 text-center px-2">Nilai Potongan</th>
                         <th class="py-1 text-center px-2">Keterangan</th>
@@ -68,7 +68,7 @@ function formatRupiah($number) {
                         <?php while ($row = $result->fetch_assoc()) { ?>
                             <tr>
                                 <td class="py-2 px-2 text-center"><?php echo $row['id_potongan']; ?></td>
-                                <td class="py-2 px-2 text-center"><?php echo $row['nama_potongan']; ?></td>
+                                <td class="py-2 px-2 text-center"><?php echo ucwords(strtolower($row['nama_potongan'])); ?></td>
                                 <td class="py-2 px-2 text-center"><?php echo formatRupiah($row['nilai_potongan']); ?></td>
                                 <td class="py-2 px-2 text-center"><?php echo $row['keterangan']; ?></td>
                                 <td class="py-2 px-2 text-center">

@@ -53,6 +53,25 @@ function formatRupiah($angka){
     return 'Rp ' . number_format($angka, 0, ',', '.');
 }
 
+function getNamaBulan($bulan) {
+    $nama_bulan = [
+        '01' => 'Januari',
+        '02' => 'Februari',
+        '03' => 'Maret',
+        '04' => 'April',
+        '05' => 'Mei',
+        '06' => 'Juni',
+        '07' => 'Juli',
+        '08' => 'Agustus',
+        '09' => 'September',
+        '10' => 'Oktober',
+        '11' => 'November',
+        '12' => 'Desember'
+    ];
+    return $nama_bulan[$bulan];
+}
+$selected_month = date('m', strtotime($gaji['tgl_gaji']));
+
 $current_page = basename($_SERVER['PHP_SELF']);
 ?>
 
@@ -66,7 +85,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
             </svg>
         </button>
     </div>
-    <div id="sidebar" class="fixed lg:relative transform lg:transform-none -translate-x-full lg:translate-x-0 flex flex-col w-64 h-screen bg-gray-900 text-white transition-transform duration-300 ease-in-out">
+    <div id="sidebar" class="fixed lg:relative transform lg:transform-none -translate-x-full lg:translate-x-0 flex flex-col w-64 h-screen bg-gray-900 text-white transition-transform duration-300 ease-in-out  lg:sticky lg:top-0">
         <div class="hidden lg:flex items-center justify-center h-16 bg-gray-800">
             <a href="#" class="text-xl font-bold text-white">Pegawai Simont Mart</a>
         </div>
@@ -94,22 +113,81 @@ $current_page = basename($_SERVER['PHP_SELF']);
         </div>
 
         <!-- Segmen Slip Gaji -->   
-        <div class="bg-white  max-w-xl border border-grey-600 border-opacity-75 shadow-md shadow-md rounded-lg p-6">
-            <div class="flex justify-between mt-2">
-                <h3 class="text-xl font-semibold mb-4">Rincian Gaji</h3>
-                <a href="cetak_pdf.php" class="bg-blue-500 h-full text-white px-4 py-2 rounded hover:bg-blue-600 cetak-pdf-btn">Cetak PDF</a>
+        <?php if ($gaji) { 
+            $gaji_kotor = $gaji['gaji_pokok'] + $gaji['gaji_lembur'] + $gaji['tot_bonus'];
+        ?>
+            <div class="bg-white max-w-4xl p-4 rounded-lg shadow-lg">
+                <h1 class="text-center font-bold text-xl">SIMONT MART</h1>
+                <h2 class="text-center text-lg">Slip Gaji Pegawai</h2>
+                <div class="flex justify-between mt-4">
+                    <div>
+                        <p>Periode: <?php echo  htmlspecialchars(getNamaBulan($selected_month)); ?></p>
+                        <p>Nama: <?php echo htmlspecialchars($pegawai['nama_pegawai']); ?></p>
+                        <p>Jabatan: <?php echo htmlspecialchars($pegawai['nama_jabatan']); ?></p>
+                        <p>No HP: <?php echo htmlspecialchars($pegawai['no_hp']); ?></p>
+                    </div>
+                    <div >
+                        <form method="POST" action="cetak_pdf.php" class="mt-4">
+                            <input type="hidden" name="pegawai" value="<?php echo $selected_pegawai; ?>">
+                            <input type="hidden" name="month" value="<?php echo $selected_month; ?>">
+                            <button type="submit" name="cetak" class="bg-green-500 cetak-pdf-btn text-white px-3 py-1 rounded hover:bg-green-600">Cetak PDF</button>
+                        </form>
+                    </div>
+                </div>
+
+                <table class="w-full mt-4 border-collapse border">
+                    <thead>
+                        <tr>
+                            <th class="border px-2 py-1">NO</th>
+                            <th class="border px-2 py-1">Ket</th>
+                            <th class="border px-2 py-1">Jumlah</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="border px-2 py-1 text-center">1</td>
+                            <td class="border px-2 py-1">Gaji Pokok</td>
+                            <td class="border px-2 py-1"><?php echo formatRupiah($gaji['gaji_pokok']); ?></td>
+                        </tr>
+                        <tr>
+                            <td class="border px-2 py-1 text-center">2</td>
+                            <td class="border px-2 py-1">Bonus</td>
+                            <td class="border px-2 py-1"><?php echo formatRupiah($gaji['tot_bonus']); ?></td>
+                        </tr>
+                        <tr>
+                            <td class="border px-2 py-1 text-center">3</td>
+                            <td class="border px-2 py-1">Lembur</td>
+                            <td class="border px-2 py-1"><?php echo formatRupiah($gaji['gaji_lembur']); ?></td>
+                        </tr>
+                        <tr class="bg-gray-200">
+                            <td class="border px-2 py-1 text-center">4</td>
+                            <td class="border px-2 py-1 font-semibold">Gaji Kotor</td>
+                            <td class="border px-2 py-1 font-semibold"><?php echo formatRupiah($gaji_kotor); ?></td>
+                        </tr>
+                        <tr>
+                            <td class="border px-2 py-1 text-center">5</td>
+                            <td class="border px-2 py-1">Potongan</td>
+                            <td class="border px-2 py-1"><?php echo formatRupiah($gaji['tot_potongan']); ?></td>
+                        </tr>
+                        <tr class="bg-gray-200">
+                            <td class="border px-2 py-1 text-center">6</td>
+                            <td class="border px-2 py-1 font-semibold">Gaji Bersih</td>
+                            <td class="border px-2 py-1 font-semibold"><?php echo formatRupiah($gaji['tot_gaji']); ?></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="mt-4 px-6 flex justify-end">
+                    <div class="flex flex-col justify-center items-center h-full">
+                        <p>Diterima Oleh:</p>
+                        <p class="mt-16 mx-auto"><?php echo htmlspecialchars($pegawai['nama_pegawai']); ?></p>
+                    </div>
+                </div>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-                <?php if ($gaji): ?>
-                    <p><strong>Jumlah Hadir:</strong> <?php echo htmlspecialchars($gaji['jumlah_hadir']); ?></p>
-                    <p><strong>Tanggal Gaji:</strong> <?php echo htmlspecialchars($gaji['tgl_gaji']); ?></p>
-                    <p><strong>Gaji Pokok:</strong> <?php echo formatRupiah($gaji['gaji_pokok']); ?></p>
-                    <p><strong>Total Bonus:</strong> <?php echo formatRupiah($gaji['tot_bonus']); ?></p>
-                    <p><strong>Total Potongan:</strong> <?php echo formatRupiah($gaji['tot_potongan']); ?></p>
-                    <p><strong>Total Gaji:</strong> <?php echo formatRupiah($gaji['tot_gaji']); ?></p>
-                <?php else: ?>
-                    <p>Gaji tidak ditemukan.</p>
-                <?php endif; ?>
+            <?php } else {
+                        echo '<p class="text-gray-500">Gaji Periode ini belum ditambahkan</p>';
+                    }
+                    ?>
             </div>
         </div>
     </div>
