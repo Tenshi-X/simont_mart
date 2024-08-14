@@ -11,7 +11,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
         </button>
 </div>
 
-<div id="sidebar" class="fixed lg:relative transform lg:transform-none -translate-x-full lg:translate-x-0 flex flex-col w-64 h-screen bg-gray-900 text-white transition-transform duration-300 ease-in-out">
+<div id="sidebar" class="fixed lg:relative transform lg:transform-none -translate-x-full lg:translate-x-0 flex flex-col w-64 h-screen bg-gray-900 text-white transition-transform duration-300 ease-in-out lg:sticky top-0">
     <div class="hidden lg:flex items-center justify-center h-16 bg-gray-800">
         <a href="#" class="text-xl font-bold text-white">Owner Simont Mart</a>
     </div>

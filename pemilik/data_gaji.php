@@ -12,13 +12,10 @@ $sql = "SELECT g.id_gaji, g.id_pegawai, p.nama_pegawai, g.jumlah_hadir, g.tgl_ga
 if ($selected_month !== 'all') {
     $sql .= " WHERE MONTH(g.tgl_gaji) = ?";
 }
-
 $stmt = $conn->prepare($sql);
-
 if ($selected_month !== 'all') {
     $stmt->bind_param("s", $selected_month);
 }
-
 $stmt->execute();
 $result = $stmt->get_result();
 
@@ -78,6 +75,7 @@ function potongNama($nama, $maxLength = 20) {
                     </tr>
                 </thead>
                 <tbody class="text-sm">
+                    <!-- Menampilkan Data Gaji -->
                     <?php if ($result->num_rows > 0) { ?>
                         <?php while ($row = $result->fetch_assoc()) { ?>
                             <tr>

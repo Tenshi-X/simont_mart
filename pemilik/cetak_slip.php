@@ -4,10 +4,15 @@ include('../components/koneksi.php');
 
 use Dompdf\Dompdf;
 
-// Ambil input dari form
+
 $selected_pegawai = isset($_POST['pegawai']) ? $_POST['pegawai'] : '';
 $selected_month = isset($_POST['month']) ? $_POST['month'] : '';
+$id_gaji = isset($_POST['id_gaji']) ? $_POST['id_gaji'] : '';
 
+if (!$id_gaji) {
+    echo "<script>alert('ID Gaji tidak ditemukan.'); window.location.href='rincian_pegawai.php';</script>";
+    exit;
+}
 if (!$selected_pegawai || !$selected_month) {
     echo "<script>alert('Pegawai atau bulan tidak dipilih.'); window.location.href='rincian_pegawai.php';</script>";
     exit;
@@ -29,9 +34,9 @@ if ($pegawai_result->num_rows > 0) {
     $pegawai = $pegawai_result->fetch_assoc();
 
     // Mengambil data gaji berdasarkan bulan yang dipilih
-    $gaji_sql = "SELECT * FROM Gaji WHERE id_pegawai = ? AND MONTH(tgl_gaji) = ?";
+    $gaji_sql = "SELECT * FROM Gaji WHERE id_gaji = ? AND MONTH(tgl_gaji) = ?";
     $stmt = $conn->prepare($gaji_sql);
-    $stmt->bind_param('ss', $selected_pegawai, $selected_month);
+    $stmt->bind_param('ss', $id_gaji, $selected_month);
     $stmt->execute();
     $gaji_result = $stmt->get_result();
 

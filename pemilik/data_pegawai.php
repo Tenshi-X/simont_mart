@@ -2,17 +2,7 @@
 include('../components/header.php');
 include('../components/koneksi.php');
 
-// Fungsi untuk menghapus pegawai
-if (isset($_GET['delete_id'])) {
-    $id_pegawai = $_GET['delete_id'];
-    $sql_delete = "DELETE FROM Pegawai WHERE id_pegawai = '$id_pegawai'";
-    if ($conn->query($sql_delete) === TRUE) {
-        header("Location: data_pegawai.php");
-    } else {
-        echo "Error deleting record: " . $conn->error;
-    }
-}
-
+// Searching Data Pegawai berdasarkan nama
 $search = isset($_GET['search']) ? $_GET['search'] : '';
 $sql = "SELECT p.id_pegawai, p.nama_pegawai, j.nama_jabatan, p.alamat, p.tempat_lahir, p.tanggal_lahir, p.tgl_masuk_kerja, p.username, p.no_hp 
         FROM Pegawai p 
@@ -54,6 +44,7 @@ $result = $conn->query($sql);
                     </tr>
                 </thead>
                 <tbody class="text-sm">
+                    <!-- Menampilkan Data Pegawai -->
                     <?php if ($result->num_rows > 0) { ?>
                         <?php while ($row = $result->fetch_assoc()) { ?>
                             <tr class="text-center">
