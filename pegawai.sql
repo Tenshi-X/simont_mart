@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 14, 2024 at 02:44 AM
+-- Generation Time: Aug 14, 2024 at 05:51 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -86,15 +86,16 @@ CREATE TABLE `gaji` (
 --
 
 INSERT INTO `gaji` (`id_gaji`, `id_pegawai`, `jumlah_hadir`, `tgl_gaji`, `gaji_pokok`, `gaji_lembur`, `tot_bonus`, `tot_potongan`, `tot_gaji`) VALUES
-(10, 3, '21', '2024-08-11 02:13:44', 3300000, 150000, 200000, 995000, 2655000),
-(12, 3, '21', '2024-08-11 13:55:01', 3300000, 200000, 200000, 995000, 2705000),
-(13, 3, '21', '2024-08-11 14:51:27', 3300000, 150000, 200000, 500000, 3150000),
-(14, 4, '23', '2024-08-11 14:55:15', 2800000, 150000, 200000, 300000, 2850000),
-(15, 4, '23', '2024-08-11 14:55:33', 2800000, 150000, 200000, 300000, 2850000),
-(16, 4, '21', '2024-08-11 14:55:59', 2800000, 150000, 2, 500000, 2450002),
-(18, 4, '23', '2024-08-13 22:17:44', 2800000, 200000, 250000, 389829, 2860171),
-(20, 3, '23', '2024-08-13 22:10:41', 3300000, 1200000, 200000, 415513, 4284487),
-(21, 4, '24', '2024-08-08 23:08:12', 2800000, 250000, 250000, 271795, 3028205);
+(25, 3, '24', '2024-08-10 10:17:25', 3300000, 250000, 350000, 314615, 3585385),
+(26, 3, '24', '2024-08-10 10:19:29', 3300000, 250000, 350000, 314615, 3585385),
+(27, 4, '23', '2024-08-07 10:22:03', 2800000, 200000, 300000, 371795, 2928205),
+(28, 3, '23', '2024-08-09 10:27:07', 3300000, 200000, 350000, 384615, 3465385),
+(29, 3, '23', '2024-08-09 10:28:34', 3300000, 200000, 350000, 384615, 3465385),
+(30, 3, '23', '2024-08-16 10:30:25', 3300000, 200000, 350000, 370513, 3479487),
+(31, 4, '23', '2024-08-08 10:33:06', 2800000, 200000, 350000, 359829, 2990171),
+(32, 3, '21', '2024-08-08 10:35:01', 3300000, 200000, 350000, 667949, 3182051),
+(33, 3, '23', '2024-08-08 10:36:46', 3300000, 250000, 350000, 384615, 3515385),
+(34, 3, '21', '2024-08-08 10:38:23', 3300000, 250000, 350000, 584615, 3315385);
 
 -- --------------------------------------------------------
 
@@ -103,10 +104,23 @@ INSERT INTO `gaji` (`id_gaji`, `id_pegawai`, `jumlah_hadir`, `tgl_gaji`, `gaji_p
 --
 
 CREATE TABLE `gaji_bonus` (
-  `id_gaji` int(11) NOT NULL,
-  `id_bonus` int(11) NOT NULL,
-  `tanggal_gaji` datetime NOT NULL DEFAULT current_timestamp()
+  `id_gaji` int(11) DEFAULT NULL,
+  `id_bonus` int(11) DEFAULT NULL,
+  `tgl_gaji` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `gaji_bonus`
+--
+
+INSERT INTO `gaji_bonus` (`id_gaji`, `id_bonus`, `tgl_gaji`) VALUES
+(29, 3, '2024-08-09 10:28:34'),
+(30, 3, '2024-08-16 10:30:25'),
+(31, 3, '2024-08-08 10:33:06'),
+(32, 3, '2024-08-08 10:35:01'),
+(33, 3, '2024-08-08 10:36:46'),
+(34, 2, '2024-08-08 10:38:23'),
+(34, 3, '2024-08-08 10:38:23');
 
 -- --------------------------------------------------------
 
@@ -115,10 +129,37 @@ CREATE TABLE `gaji_bonus` (
 --
 
 CREATE TABLE `gaji_potongan` (
-  `id_gaji` int(11) NOT NULL,
-  `id_potongan` int(11) NOT NULL,
-  `tanggal_gaji` datetime NOT NULL DEFAULT current_timestamp()
+  `id_gaji` int(11) DEFAULT NULL,
+  `id_potongan` int(11) DEFAULT NULL,
+  `tgl_gaji` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `gaji_potongan`
+--
+
+INSERT INTO `gaji_potongan` (`id_gaji`, `id_potongan`, `tgl_gaji`) VALUES
+(25, 2, '2024-08-10 10:17:25'),
+(25, 6, '2024-08-10 10:17:25'),
+(25, 7, '2024-08-10 10:17:25'),
+(26, 2, '2024-08-10 10:19:29'),
+(26, 6, '2024-08-10 10:19:29'),
+(26, 7, '2024-08-10 10:19:29'),
+(28, 6, '2024-08-09 10:27:07'),
+(28, 7, '2024-08-09 10:27:07'),
+(29, 6, '2024-08-09 10:28:34'),
+(29, 7, '2024-08-09 10:28:34'),
+(30, 6, '2024-08-16 10:30:25'),
+(30, 7, '2024-08-16 10:30:25'),
+(31, 6, '2024-08-08 10:33:06'),
+(31, 7, '2024-08-08 10:33:06'),
+(32, 2, '2024-08-08 10:35:01'),
+(32, 6, '2024-08-08 10:35:01'),
+(32, 7, '2024-08-08 10:35:01'),
+(33, 6, '2024-08-08 10:36:46'),
+(33, 7, '2024-08-08 10:36:46'),
+(34, 6, '2024-08-08 10:38:23'),
+(34, 7, '2024-08-08 10:38:23');
 
 -- --------------------------------------------------------
 
@@ -221,15 +262,15 @@ ALTER TABLE `gaji`
 -- Indexes for table `gaji_bonus`
 --
 ALTER TABLE `gaji_bonus`
-  ADD KEY `id_gaji` (`id_gaji`),
-  ADD KEY `id_bonus` (`id_bonus`);
+  ADD KEY `gaji_bonus_ibfk_1` (`id_gaji`),
+  ADD KEY `gaji_bonus_ibfk_2` (`id_bonus`);
 
 --
 -- Indexes for table `gaji_potongan`
 --
 ALTER TABLE `gaji_potongan`
-  ADD KEY `id_gaji` (`id_gaji`),
-  ADD KEY `id_potongan` (`id_potongan`);
+  ADD KEY `gaji_potongan_ibfk_1` (`id_gaji`),
+  ADD KEY `gaji_potongan_ibfk_2` (`id_potongan`);
 
 --
 -- Indexes for table `jabatan`
@@ -270,7 +311,7 @@ ALTER TABLE `bonus`
 -- AUTO_INCREMENT for table `gaji`
 --
 ALTER TABLE `gaji`
-  MODIFY `id_gaji` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id_gaji` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT for table `jabatan`
@@ -304,15 +345,15 @@ ALTER TABLE `gaji`
 -- Constraints for table `gaji_bonus`
 --
 ALTER TABLE `gaji_bonus`
-  ADD CONSTRAINT `gaji_bonus_ibfk_1` FOREIGN KEY (`id_gaji`) REFERENCES `gaji` (`id_gaji`),
-  ADD CONSTRAINT `gaji_bonus_ibfk_2` FOREIGN KEY (`id_bonus`) REFERENCES `bonus` (`id_bonus`);
+  ADD CONSTRAINT `gaji_bonus_ibfk_1` FOREIGN KEY (`id_gaji`) REFERENCES `gaji` (`id_gaji`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `gaji_bonus_ibfk_2` FOREIGN KEY (`id_bonus`) REFERENCES `bonus` (`id_bonus`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `gaji_potongan`
 --
 ALTER TABLE `gaji_potongan`
-  ADD CONSTRAINT `gaji_potongan_ibfk_1` FOREIGN KEY (`id_gaji`) REFERENCES `gaji` (`id_gaji`),
-  ADD CONSTRAINT `gaji_potongan_ibfk_2` FOREIGN KEY (`id_potongan`) REFERENCES `potongan` (`id_potongan`);
+  ADD CONSTRAINT `gaji_potongan_ibfk_1` FOREIGN KEY (`id_gaji`) REFERENCES `gaji` (`id_gaji`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `gaji_potongan_ibfk_2` FOREIGN KEY (`id_potongan`) REFERENCES `potongan` (`id_potongan`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `pegawai`

@@ -11,6 +11,8 @@ $jumlah_hadir = isset($_GET['jumlah_hadir']) ? $_GET['jumlah_hadir'] : '';
 $tgl_gaji = date('Y-m-d H:i:s'); // Otomatis dengan waktu sekarang di GMT+7
 $gaji_pokok = isset($_GET['gaji_pokok']) ? $_GET['gaji_pokok'] : '';
 $gaji_lembur = isset($_GET['gaji_lembur']) ? $_GET['gaji_lembur'] : '';
+$bonus_kinerja = isset($_GET['bonus_kinerja']) ? $_GET['bonus_kinerja'] : '';
+$bonus_jabatan = isset($_GET['bonus_jabatan']) ? $_GET['bonus_jabatan'] : '';
 $tot_bonus = isset($_GET['tot_bonus']) ? $_GET['tot_bonus'] : '';
 $tot_potongan = isset($_GET['tot_potongan']) ? $_GET['tot_potongan'] : '';
 $keterlambatan = isset($_GET['keterlambatan']) ? $_GET['keterlambatan'] : '';
@@ -20,39 +22,44 @@ $potongan_kehadiran = 0;
 $potongan_kerugian = $tot_potongan;
 $potongan_per_hari = 100000;
 $potongan_keterlambatan_per_jam = (($gaji_pokok / 26) / 9);
-$id_gaji = 23;
 
 if ($jumlah_hadir < 26) {
     $potongan_kehadiran = (26 - $jumlah_hadir) * $potongan_per_hari;
 }
 
-if($potongan_kehadiran!= 0){
+if($potongan_kehadiran != 0){
     $id_tidak_hadir = 7;
-}
-else{
+} else {
     $id_tidak_hadir = NULL;
 }
 
 if($potongan_keterlambatan_per_jam == 14102){
     $id_keterlambatan = 3;
-}
-else if($potongan_keterlambatan_per_jam == 11965){
+} else if($potongan_keterlambatan_per_jam == 11965){
     $id_keterlambatan = 4;
-}
-else if($potongan_keterlambatan_per_jam == 11111){
+} else if($potongan_keterlambatan_per_jam == 11111){
     $id_keterlambatan = 5;
-}
-else{
+} else {
     $id_keterlambatan = 6;
 }
 
 if($tot_potongan != 0){
     $id_kerugian = 2;
-}
-else{
+} else {
     $id_kerugian = NULL;
 }
-    
+
+if($bonus_kinerja != 0){
+    $id_bonus_kinerja = 2;
+} else {
+    $id_bonus_kinerja = 5;
+}
+
+if($bonus_jabatan == 250000){
+    $id_bonus_jabatan = 3;
+} else {
+    $id_bonus_jabatan = 4;
+}
 
 $potongan_keterlambatan = $potongan_keterlambatan_per_jam * $keterlambatan;
 // Perhitungan total potongan
@@ -77,6 +84,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $sql = "INSERT INTO Gaji (id_pegawai, jumlah_hadir, tgl_gaji, gaji_pokok, gaji_lembur, tot_bonus, tot_potongan, tot_gaji) 
             VALUES ('$id_pegawai', '$jumlah_hadir', '$tgl_gaji', '$gaji_pokok', '$gaji_lembur', '$tot_bonus', '$tot_potongan_final', '$tot_gaji')";
     if ($conn->query($sql) === TRUE) {
+        $id_gaji = $conn->insert_id;
         $status = "Pencatatan berhasil";
         $alert_color = "bg-green-100 border-green-400 text-green-700";
         $redirect = true;
@@ -84,22 +92,45 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $status = "Pencatatan gagal";
         $alert_color = "bg-red-100 border-red-400 text-red-700";
     }
-    $conn->query("INSERT INTO gaji_potongan(id_gaji, id_potongan, tgl_gaji) 
-    VALUES ('$id_gaji','$id_kerugian', '$tgl_gaji'),
-           ('$id_gaji','$id_keterlambatan', '$tgl_gaji'),
-           ('$id_gaji','$id_tidak_hadir', '$tgl_gaji')");
-    $id_gaji++;
+
+    if ($id_kerugian !== NULL) {
+        $conn->query("INSERT INTO gaji_potongan(id_gaji, id_potongan, tgl_gaji) 
+        VALUES ('$id_gaji','$id_kerugian', '$tgl_gaji')");
+    }
+    
+    if ($id_keterlambatan !== NULL) {
+        $conn->query("INSERT INTO gaji_potongan(id_gaji, id_potongan, tgl_gaji) 
+        VALUES ('$id_gaji','$id_keterlambatan', '$tgl_gaji')");
+    }
+    
+    if ($id_tidak_hadir !== NULL) {
+        $conn->query("INSERT INTO gaji_potongan(id_gaji, id_potongan, tgl_gaji) 
+        VALUES ('$id_gaji','$id_tidak_hadir', '$tgl_gaji')");
+    }
+
+    $bonus_kinerja_exists = $conn->query("SELECT id_bonus FROM bonus WHERE id_bonus = '$id_bonus_kinerja'")->num_rows > 0;
+
+    $bonus_jabatan_exists = $conn->query("SELECT id_bonus FROM bonus WHERE id_bonus = '$id_bonus_jabatan'")->num_rows > 0;
+
+if ($bonus_kinerja_exists) {
+    $conn->query("INSERT INTO gaji_bonus(id_gaji, id_bonus, tgl_gaji) 
+    VALUES ('$id_gaji','$id_bonus_kinerja', '$tgl_gaji')");
+}
+if ($bonus_jabatan_exists) {
+    $conn->query("INSERT INTO gaji_bonus(id_gaji, id_bonus, tgl_gaji) 
+    VALUES ('$id_gaji','$id_bonus_jabatan', '$tgl_gaji')");
+}
 }
 
 $employees = $conn->query("SELECT * FROM Pegawai");
 ?>
 
 
+
 <div class="flex flex-col lg:flex-row">
     <aside class="lg:w-1/5">
         <?php include('../components/sidebar.php'); ?>
     </aside>
-
     <main class="flex-1 p-6">
     <?php if (!empty($status)): ?>
     <div id="alert" class="hidden <?php echo $alert_color; ?> px-4 py-3 w-4/5 rounded absolute text-left top-0 right-0" role="alert">

@@ -24,7 +24,9 @@ if (isset($_GET['id'])) {
         $gaji_pokok = $_POST['gaji_pokok'];
         $jumlah_lembur = $_POST['jumlah_lembur'];
         $kerugian_barang = $_POST['kerugian_barang'];
-        $tot_bonus = $_POST['tot_bonus'];
+        $bonus_kinerja =  $_POST['bonus_kinerja'];
+        $bonus_jabatan = $_POST['bonus_jabatan'];
+        $tot_bonus = $bonus_kinerja + $bonus_jabatan;
         $keterlambatan = $_POST['keterlambatan'];
         $tgl_gaji_manual = $_POST['tgl_gaji_manual'];
     
@@ -41,8 +43,8 @@ if (isset($_GET['id'])) {
         // Hitung tot_gaji
         $tot_gaji = $gaji_pokok - $tot_potongan + $gaji_lembur + $tot_bonus;
     
-        // Redirect ke halaman kelola_gaji.php untuk konfirmasi
-        header("Location: konfirmasi_edit_gaji.php?id_gaji=$id_gaji&id_pegawai=$id_pegawai&jumlah_hadir=$jumlah_hadir&tgl_gaji=$tgl_gaji_manual&gaji_pokok=$gaji_pokok&gaji_lembur=$gaji_lembur&tot_bonus=$tot_bonus&tot_potongan=$tot_potongan&tot_gaji=$tot_gaji&keterlambatan=$keterlambatan");
+        // Redirect ke halaman konfirmasi_edit_gaji.php untuk konfirmasi
+        header("Location: konfirmasi_edit_gaji.php?id_gaji=$id_gaji&id_pegawai=$id_pegawai&jumlah_hadir=$jumlah_hadir&tgl_gaji=$tgl_gaji_manual&gaji_pokok=$gaji_pokok&gaji_lembur=$gaji_lembur&tot_bonus=$tot_bonus&tot_potongan=$tot_potongan&tot_gaji=$tot_gaji&keterlambatan=$keterlambatan&bonus_kinerja=$bonus_kinerja&bonus_jabatan=$bonus_jabatan");
         exit;
 
         if ($conn->query($sql_update) === TRUE) {
@@ -65,7 +67,9 @@ if (isset($_GET['id'])) {
     header("Location: data_gaji.php");
     exit;
 }
-$bonuses = $conn->query("SELECT id_bonus, nama_bonus, jumlah_bonus FROM bonus");
+$bonus_kinerja = $conn->query("SELECT id_bonus, nama_bonus, jumlah_bonus FROM bonus WHERE id_bonus = 2 OR id_bonus = 5");
+$bonus_jabatan = $conn->query("SELECT id_bonus, nama_bonus, jumlah_bonus FROM bonus WHERE id_bonus = 3 OR id_bonus = 4");
+
 
 ?>
 
@@ -130,20 +134,30 @@ $bonuses = $conn->query("SELECT id_bonus, nama_bonus, jumlah_bonus FROM bonus");
                     <input type="number" id="kerugian_barang" name="kerugian_barang" class="mt-1 block w-full px-2 py-2 border border-black rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
                 </div>
                 <div>
-                    <label for="tot_bonus" class="block text-sm font-medium text-gray-700">Jumlah Bonus</label>
-                    <select name="tot_bonus" id="tot_bonus" class="mt-1 block w-full px-2 py-2 border border-black rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+                <label for="keterlambatan" class="block text-sm font-medium text-gray-700">Keterlambatan (dalam jam)</label>
+                    <input type="number" id="keterlambatan" name="keterlambatan" class="mt-1 block w-full px-2 py-2 border border-black rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+                </div>
+                <div>
+                    <label for="bonus_kinerja" class="block text-sm font-medium text-gray-700">Bonus Kinerja</label>
+                    <select name="bonus_kinerja" id="bonus_kinerja" class="mt-1 block w-full px-2 py-2 border border-black rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
                         <option value="">Pilih Bonus</option>
-                        <?php while ($row = $bonuses->fetch_assoc()) { ?>
+                        <?php while ($row = $bonus_kinerja->fetch_assoc()) { ?>
                             <option value="<?php echo $row['jumlah_bonus']; ?>">
                                 <?php echo $row['nama_bonus'] . ' (' . formatRupiah($row['jumlah_bonus']) . ')'; ?>
                             </option>
                         <?php } ?>
                     </select>
                 </div>
-
-                <div class="col-span-1 mb-4">
-                    <label for="keterlambatan" class="block text-sm font-medium text-gray-700">Keterlambatan (dalam jam)</label>
-                    <input type="number" id="keterlambatan" name="keterlambatan" class="mt-1 block w-full px-2 py-2 border border-black rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+                <div>
+                    <label for="bonus_jabatan" class="block text-sm font-medium text-gray-700">Bonus Jabatan</label>
+                    <select name="bonus_jabatan" id="bonus_jabatan" class="mt-1 block w-full px-2 py-2 border border-black rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+                        <option value="">Pilih Bonus</option>
+                        <?php while ($row = $bonus_jabatan->fetch_assoc()) { ?>
+                            <option value="<?php echo $row['jumlah_bonus']; ?>">
+                                <?php echo $row['nama_bonus'] . ' (' . formatRupiah($row['jumlah_bonus']) . ')'; ?>
+                            </option>
+                        <?php } ?>
+                    </select>
                 </div>
                 <div>
                     <label for="tgl_gaji_manual" class="block text-sm font-medium text-gray-700">Tanggal Gaji</label>

@@ -12,6 +12,8 @@ $jumlah_hadir = isset($_GET['jumlah_hadir']) ? $_GET['jumlah_hadir'] : '';
 $tgl_gaji = isset($_GET['tgl_gaji']) ? $_GET['tgl_gaji'] . ' ' . date('H:i:s') : date('Y-m-d H:i:s');
 $gaji_pokok = isset($_GET['gaji_pokok']) ? $_GET['gaji_pokok'] : '';
 $gaji_lembur = isset($_GET['gaji_lembur']) ? $_GET['gaji_lembur'] : '';
+$bonus_kinerja = isset($_GET['bonus_kinerja']) ? $_GET['bonus_kinerja'] : '';
+$bonus_jabatan = isset($_GET['bonus_jabatan']) ? $_GET['bonus_jabatan'] : '';
 $tot_bonus = isset($_GET['tot_bonus']) ? $_GET['tot_bonus'] : '';
 $tot_potongan = isset($_GET['tot_potongan']) ? $_GET['tot_potongan'] : '';
 $keterlambatan = isset($_GET['keterlambatan']) ? $_GET['keterlambatan'] : '';
@@ -24,6 +26,40 @@ $potongan_keterlambatan_per_jam = (($gaji_pokok / 26) / 9);
 
 if ($jumlah_hadir < 26) {
     $potongan_kehadiran = (26 - $jumlah_hadir) * $potongan_per_hari;
+}
+
+if($potongan_kehadiran != 0){
+    $id_tidak_hadir = 7;
+} else {
+    $id_tidak_hadir = NULL;
+}
+
+if($potongan_keterlambatan_per_jam == 14102){
+    $id_keterlambatan = 3;
+} else if($potongan_keterlambatan_per_jam == 11965){
+    $id_keterlambatan = 4;
+} else if($potongan_keterlambatan_per_jam == 11111){
+    $id_keterlambatan = 5;
+} else {
+    $id_keterlambatan = 6;
+}
+
+if($tot_potongan != 0){
+    $id_kerugian = 2;
+} else {
+    $id_kerugian = NULL;
+}
+
+if($bonus_kinerja != 0){
+    $id_bonus_kinerja = 2;
+} else {
+    $id_bonus_kinerja = 5;
+}
+
+if($bonus_jabatan == 250000){
+    $id_bonus_jabatan = 3;
+} else {
+    $id_bonus_jabatan = 4;
 }
 
 $potongan_keterlambatan = $potongan_keterlambatan_per_jam * $keterlambatan;
@@ -59,6 +95,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         tot_gaji = '$tot_gaji'
                     WHERE id_gaji = '$id_gaji'";
     if ($conn->query($sql) === TRUE) {
+        $id_gaji = $conn->insert_id;
         $status = "Pencatatan berhasil";
         $alert_color = "bg-green-100 border-green-400 text-green-700";
         $redirect = true;
@@ -66,6 +103,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $status = "Pencatatan gagal";
         $alert_color = "bg-red-100 border-red-400 text-red-700";
     }
+
+    // Cek apakah data id_gaji dan id_potongan sudah ada di gaji_potongan
+    $conn->query("UPDATE gaji_potongan SET tgl_gaji = '$tgl_gaji' WHERE id_gaji = '$id_gaji' AND id_potongan = '$id_kerugian'");
+    $conn->query("UPDATE gaji_potongan SET tgl_gaji = '$tgl_gaji' WHERE id_gaji = '$id_gaji' AND id_potongan = '$id_keterlambatan'");
+    $conn->query("UPDATE gaji_potongan SET tgl_gaji = '$tgl_gaji' WHERE id_gaji = '$id_gaji' AND id_potongan = '$id_tidak_hadir'");
+    $conn->query("UPDATE gaji_bonus SET tgl_gaji = '$tgl_gaji' WHERE id_gaji = '$id_gaji' AND id_bonus = '$id_bonus_kinerja'");
+    $conn->query("UPDATE gaji_bonus SET tgl_gaji = '$tgl_gaji' WHERE id_gaji = '$id_gaji' AND id_bonus = '$id_bonus_jabatan'");
+
 }
 
 $employees = $conn->query("SELECT * FROM Pegawai");
@@ -133,7 +178,6 @@ $employees = $conn->query("SELECT * FROM Pegawai");
                     <input type="hidden" id="tot_bonus" name="tot_bonus" value="<?php echo $tot_bonus; ?>">
                 </div>
                 <div>
-                    <label for="tgl_gaji" class="block text-sm font-medium text-gray-700">Tanggal Gaji</label>
                     <input type="hidden" id="tgl_gaji" name="tgl_gaji" value="<?php echo $tgl_gaji; ?>">
                 </div>
                 <div class="mb-1 col-span-2">
