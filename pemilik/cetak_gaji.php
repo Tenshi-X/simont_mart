@@ -59,7 +59,7 @@ function formatRupiah($number) {
     <div class="lg:w-1/5">
         <?php include('sidebar.php'); ?>
     </div>
-    <div class="container mx-auto lg:w-4/5 py-2">
+    <div class="container mx-auto lg:w-4/5 py-4">
         <h2 class="text-2xl font-semibold mb-4">Cetak Slip Gaji</h2>
 
         <form method="GET" class="mb-4">

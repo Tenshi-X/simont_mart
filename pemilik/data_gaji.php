@@ -2,22 +2,45 @@
 include('../components/header.php');
 include('../components/koneksi.php');
 
-// Handle filter bulan
-$selected_month = isset($_GET['month']) ? $_GET['month'] : 'all';
+// Handle filter tanggal mulai dan tanggal akhir
+$start_date = isset($_GET['start_date']) ? $_GET['start_date'] : '';
+$end_date = isset($_GET['end_date']) ? $_GET['end_date'] : '';
 
-// Query untuk mendapatkan data gaji beserta nama pegawai sesuai bulan yang dipilih atau semua data jika memilih "Semua Bulan"
+// Query untuk mendapatkan data gaji beserta nama pegawai sesuai tanggal yang dipilih
 $sql = "SELECT g.id_gaji, g.id_pegawai, p.nama_pegawai, g.jumlah_hadir, g.tgl_gaji, g.gaji_pokok, g.gaji_lembur, g.tot_bonus, g.tot_potongan, g.tot_gaji 
         FROM Gaji g 
         JOIN Pegawai p ON g.id_pegawai = p.id_pegawai";
-if ($selected_month !== 'all') {
-    $sql .= " WHERE MONTH(g.tgl_gaji) = ?";
+
+if (!empty($start_date) || !empty($end_date)) {
+    $conditions = [];
+    if (!empty($start_date)) {
+        $conditions[] = "g.tgl_gaji >= ?";
+    }
+    if (!empty($end_date)) {
+        $conditions[] = "g.tgl_gaji <= ?";
+    }
+    $sql .= " WHERE " . implode(' AND ', $conditions);
 }
+
 $stmt = $conn->prepare($sql);
-if ($selected_month !== 'all') {
-    $stmt->bind_param("s", $selected_month);
+
+$params = [];
+$types = '';
+if (!empty($start_date)) {
+    $types .= 's';
+    $params[] = $start_date;
 }
+if (!empty($end_date)) {
+    $types .= 's';
+    $params[] = $end_date;
+}
+if (!empty($params)) {
+    $stmt->bind_param($types, ...$params);
+}
+
 $stmt->execute();
 $result = $stmt->get_result();
+
 
 function formatRupiah($number) {
     return 'Rp ' . number_format($number, 0, ',', '.');
@@ -38,24 +61,13 @@ function potongNama($nama, $maxLength = 20) {
     </div>
     <div class="container mx-auto lg:w-4/5 py-4">
         <h2 class="text-2xl font-semibold mb-4">Data Gaji</h2>
-
         <form method="GET" class="mb-4">
-            <label for="month" class="mr-2">Pilih Bulan:</label>
-            <select id="month" name="month" class="border-gray-300 p-2">
-                <option value="all" <?php echo $selected_month == 'all' ? 'selected' : ''; ?>>Semua Bulan</option>
-                <option value="01" <?php echo $selected_month == '01' ? 'selected' : ''; ?>>Januari</option>
-                <option value="02" <?php echo $selected_month == '02' ? 'selected' : ''; ?>>Februari</option>
-                <option value="03" <?php echo $selected_month == '03' ? 'selected' : ''; ?>>Maret</option>
-                <option value="04" <?php echo $selected_month == '04' ? 'selected' : ''; ?>>April</option>
-                <option value="05" <?php echo $selected_month == '05' ? 'selected' : ''; ?>>Mei</option>
-                <option value="06" <?php echo $selected_month == '06' ? 'selected' : ''; ?>>Juni</option>
-                <option value="07" <?php echo $selected_month == '07' ? 'selected' : ''; ?>>Juli</option>
-                <option value="08" <?php echo $selected_month == '08' ? 'selected' : ''; ?>>Agustus</option>
-                <option value="09" <?php echo $selected_month == '09' ? 'selected' : ''; ?>>September</option>
-                <option value="10" <?php echo $selected_month == '10' ? 'selected' : ''; ?>>Oktober</option>
-                <option value="11" <?php echo $selected_month == '11' ? 'selected' : ''; ?>>November</option>
-                <option value="12" <?php echo $selected_month == '12' ? 'selected' : ''; ?>>Desember</option>
-            </select>
+            <label for="start_date" class="mr-2">Tanggal Mulai:</label>
+            <input type="date" id="start_date" name="start_date" value="<?php echo $start_date; ?>" class="border-gray-300 p-2">
+            
+            <label for="end_date" class="mr-2 ml-4">Tanggal Akhir:</label>
+            <input type="date" id="end_date" name="end_date" value="<?php echo $end_date; ?>" class="border-gray-300 p-2">
+            
             <button type="submit" class="ml-2 bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Filter</button>
         </form>
 
