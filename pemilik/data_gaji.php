@@ -2,7 +2,6 @@
 include('../components/header.php');
 include('../components/koneksi.php');
 
-// Handle filter tanggal mulai dan tanggal akhir
 $start_date = isset($_GET['start_date']) ? $_GET['start_date'] : '';
 $end_date = isset($_GET['end_date']) ? $_GET['end_date'] : '';
 
@@ -14,10 +13,10 @@ $sql = "SELECT g.id_gaji, g.id_pegawai, p.nama_pegawai, g.jumlah_hadir, g.tgl_ga
 if (!empty($start_date) || !empty($end_date)) {
     $conditions = [];
     if (!empty($start_date)) {
-        $conditions[] = "g.tgl_gaji >= ?";
+        $conditions[] = "DATE(g.tgl_gaji) >= ?";
     }
     if (!empty($end_date)) {
-        $conditions[] = "g.tgl_gaji <= ?";
+        $conditions[] = "DATE(g.tgl_gaji) <= ?";
     }
     $sql .= " WHERE " . implode(' AND ', $conditions);
 }
@@ -37,6 +36,7 @@ if (!empty($end_date)) {
 if (!empty($params)) {
     $stmt->bind_param($types, ...$params);
 }
+
 
 $stmt->execute();
 $result = $stmt->get_result();
