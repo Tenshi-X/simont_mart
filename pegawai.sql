@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 12, 2024 at 02:03 AM
--- Server version: 10.4.21-MariaDB
--- PHP Version: 8.0.10
+-- Generation Time: Aug 14, 2024 at 02:44 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -31,7 +31,7 @@ CREATE TABLE `admin` (
   `id_admin` int(11) NOT NULL,
   `username` varchar(50) NOT NULL,
   `password` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `admin`
@@ -51,17 +51,17 @@ CREATE TABLE `bonus` (
   `id_bonus` int(11) NOT NULL,
   `nama_bonus` varchar(50) NOT NULL,
   `jumlah_bonus` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `bonus`
 --
 
 INSERT INTO `bonus` (`id_bonus`, `nama_bonus`, `jumlah_bonus`) VALUES
-(1, 'Tidak Ada Bonus', 0),
 (2, 'Bonus Kinerja', 100000),
 (3, 'Bonus Jabatan Kepala Toko', 250000),
-(4, 'Bonus Jabatan Bendahara', 200000);
+(4, 'Bonus Jabatan Bendahara', 200000),
+(5, 'Tidak Ada Bonus', 0);
 
 -- --------------------------------------------------------
 
@@ -79,7 +79,7 @@ CREATE TABLE `gaji` (
   `tot_bonus` int(11) NOT NULL,
   `tot_potongan` int(11) NOT NULL,
   `tot_gaji` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `gaji`
@@ -92,8 +92,33 @@ INSERT INTO `gaji` (`id_gaji`, `id_pegawai`, `jumlah_hadir`, `tgl_gaji`, `gaji_p
 (14, 4, '23', '2024-08-11 14:55:15', 2800000, 150000, 200000, 300000, 2850000),
 (15, 4, '23', '2024-08-11 14:55:33', 2800000, 150000, 200000, 300000, 2850000),
 (16, 4, '21', '2024-08-11 14:55:59', 2800000, 150000, 2, 500000, 2450002),
-(18, 4, '23', '2024-08-11 18:36:15', 2800000, 200000, 50000, 720000, 2330000),
-(19, 4, '23', '2024-08-12 03:07:46', 2800000, 200000, 33333, 347863, 2685470);
+(18, 4, '23', '2024-08-13 22:17:44', 2800000, 200000, 250000, 389829, 2860171),
+(20, 3, '23', '2024-08-13 22:10:41', 3300000, 1200000, 200000, 415513, 4284487),
+(21, 4, '24', '2024-08-08 23:08:12', 2800000, 250000, 250000, 271795, 3028205);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `gaji_bonus`
+--
+
+CREATE TABLE `gaji_bonus` (
+  `id_gaji` int(11) NOT NULL,
+  `id_bonus` int(11) NOT NULL,
+  `tanggal_gaji` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `gaji_potongan`
+--
+
+CREATE TABLE `gaji_potongan` (
+  `id_gaji` int(11) NOT NULL,
+  `id_potongan` int(11) NOT NULL,
+  `tanggal_gaji` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -105,7 +130,7 @@ CREATE TABLE `jabatan` (
   `id_jabatan` int(11) NOT NULL,
   `nama_jabatan` varchar(50) NOT NULL,
   `gaji_pokok` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `jabatan`
@@ -134,7 +159,7 @@ CREATE TABLE `pegawai` (
   `username` varchar(50) NOT NULL,
   `password` varchar(50) NOT NULL,
   `no_hp` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `pegawai`
@@ -155,19 +180,19 @@ CREATE TABLE `potongan` (
   `nama_potongan` varchar(50) NOT NULL,
   `nilai_potongan` int(11) NOT NULL,
   `keterangan` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `potongan`
 --
 
 INSERT INTO `potongan` (`id_potongan`, `nama_potongan`, `nilai_potongan`, `keterangan`) VALUES
-(1, 'tidak hadir', 100000, 'per hari'),
 (2, 'kerugian barang', 15, 'dalam persen'),
 (3, 'keterlambatan kepala toko', 14102, 'per jam'),
 (4, 'keterlambatan bendahara', 11965, 'per jam'),
 (5, 'keterlambatan kasir', 11111, 'per jam'),
-(6, 'keterlambatan pramuniaga', 10256, 'per jam');
+(6, 'keterlambatan pramuniaga', 10256, 'per jam'),
+(7, 'tidak hadir', 100000, 'per hari');
 
 --
 -- Indexes for dumped tables
@@ -191,6 +216,20 @@ ALTER TABLE `bonus`
 ALTER TABLE `gaji`
   ADD PRIMARY KEY (`id_gaji`),
   ADD KEY `id_pegawai` (`id_pegawai`);
+
+--
+-- Indexes for table `gaji_bonus`
+--
+ALTER TABLE `gaji_bonus`
+  ADD KEY `id_gaji` (`id_gaji`),
+  ADD KEY `id_bonus` (`id_bonus`);
+
+--
+-- Indexes for table `gaji_potongan`
+--
+ALTER TABLE `gaji_potongan`
+  ADD KEY `id_gaji` (`id_gaji`),
+  ADD KEY `id_potongan` (`id_potongan`);
 
 --
 -- Indexes for table `jabatan`
@@ -225,13 +264,13 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `bonus`
 --
 ALTER TABLE `bonus`
-  MODIFY `id_bonus` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_bonus` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `gaji`
 --
 ALTER TABLE `gaji`
-  MODIFY `id_gaji` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id_gaji` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `jabatan`
@@ -249,7 +288,7 @@ ALTER TABLE `pegawai`
 -- AUTO_INCREMENT for table `potongan`
 --
 ALTER TABLE `potongan`
-  MODIFY `id_potongan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_potongan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Constraints for dumped tables
@@ -260,6 +299,20 @@ ALTER TABLE `potongan`
 --
 ALTER TABLE `gaji`
   ADD CONSTRAINT `fk_pegawai_gaji` FOREIGN KEY (`id_pegawai`) REFERENCES `pegawai` (`id_pegawai`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `gaji_bonus`
+--
+ALTER TABLE `gaji_bonus`
+  ADD CONSTRAINT `gaji_bonus_ibfk_1` FOREIGN KEY (`id_gaji`) REFERENCES `gaji` (`id_gaji`),
+  ADD CONSTRAINT `gaji_bonus_ibfk_2` FOREIGN KEY (`id_bonus`) REFERENCES `bonus` (`id_bonus`);
+
+--
+-- Constraints for table `gaji_potongan`
+--
+ALTER TABLE `gaji_potongan`
+  ADD CONSTRAINT `gaji_potongan_ibfk_1` FOREIGN KEY (`id_gaji`) REFERENCES `gaji` (`id_gaji`),
+  ADD CONSTRAINT `gaji_potongan_ibfk_2` FOREIGN KEY (`id_potongan`) REFERENCES `potongan` (`id_potongan`);
 
 --
 -- Constraints for table `pegawai`
