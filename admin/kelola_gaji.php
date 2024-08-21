@@ -47,7 +47,7 @@ if($bonus_kinerja != 0){
     $id_bonus_kinerja = 5;
 }
 
-if($nama_jabatan == "Kepala Toko"){
+if($nama_jabatan == "Kepala toko"){
     $id_bonus_jabatan = 3;
     $id_keterlambatan = 3;
 } else if($nama_jabatan == "Bendahara") {
@@ -90,7 +90,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $alert_color = "bg-green-100 border-green-400 text-green-700";
         $redirect = true;
 
-        if ($nama_jabatan !== "kepala toko" && $nama_jabatan !== "bendahara") {
+        if ($nama_jabatan != "Kepala toko" && $nama_jabatan != "Bendahara") {
             if ($id_kerugian !== NULL) {
                 $stmt_potongan = $conn->prepare("INSERT INTO gaji_potongan (id_gaji, id_potongan, nilai_potongan, tgl_gaji) VALUES (?, ?, ?, ?)");
                 $stmt_potongan->bind_param("iiss", $id_gaji, $id_kerugian,$potongan_kerugian, $tgl_gaji);
@@ -111,7 +111,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             if ($bonus_kinerja != 0) {
                 $stmt_bonus = $conn->prepare("INSERT INTO gaji_bonus (id_gaji, id_bonus, nilai_bonus, tgl_gaji) VALUES (?, ?, ?, ?)");
-                $stmt_bonus->bind_param("iiss", $id_gaji, $id_bonus_kinerja,$bonus_kinerja , $tgl_gaji);
+                $stmt_bonus->bind_param("iiss", $id_gaji, $id_bonus_kinerja, $bonus_kinerja , $tgl_gaji);
                 $stmt_bonus->execute();
             }
 

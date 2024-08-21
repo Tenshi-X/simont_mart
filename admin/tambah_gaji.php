@@ -34,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $gaji_lembur = $jumlah_lembur * 50000;
 
     // Hitung tot_potongan
-    if ($nama_jabatan != "kepala toko" && $nama_jabatan != "bendahara" && $kerugian_barang >= 120000) {
+    if ($nama_jabatan != "Kepala toko" && $nama_jabatan != "Bendahara" && $kerugian_barang >= 120000) {
         $tot_potongan = (15 * $kerugian_barang) / 100;
     } else {
         $tot_potongan = 0;
