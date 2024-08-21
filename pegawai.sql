@@ -205,10 +205,10 @@ CREATE TABLE `jabatan` (
 --
 
 INSERT INTO `jabatan` (`id_jabatan`, `nama_jabatan`, `gaji_pokok`, `gaji_bonus`) VALUES
-(4, 'kepala toko', 3300000, 250000),
-(5, 'bendahara', 2800000, 200000),
-(6, 'kasir', 2600000, 75000),
-(7, 'pramuniaga', 2400000, 75000);
+(4, 'Kepala toko', 3300000, 250000),
+(5, 'Bendahara', 2800000, 200000),
+(6, 'Kasir', 2600000, 75000),
+(7, 'Pramuniaga', 2400000, 75000);
 
 -- --------------------------------------------------------
 
@@ -258,12 +258,12 @@ CREATE TABLE `potongan` (
 --
 
 INSERT INTO `potongan` (`id_potongan`, `nama_potongan`, `nilai_potongan`, `keterangan`) VALUES
-(2, 'kerugian barang', 15, 'dalam persen'),
-(3, 'keterlambatan kepala toko', 14102, 'per jam'),
-(4, 'keterlambatan bendahara', 11965, 'per jam'),
-(5, 'keterlambatan kasir', 11111, 'per jam'),
-(6, 'keterlambatan pramuniaga', 10256, 'per jam'),
-(7, 'tidak hadir', 100000, 'per hari');
+(2, 'Kerugian barang', 15, 'dalam persen'),
+(3, 'Keterlambatan kepala toko', 14102, 'per jam'),
+(4, 'Keterlambatan bendahara', 11965, 'per jam'),
+(5, 'Keterlambatan kasir', 11111, 'per jam'),
+(6, 'Keterlambatan pramuniaga', 10256, 'per jam'),
+(7, 'Tidak hadir', 100000, 'per hari');
 
 --
 -- Indexes for dumped tables

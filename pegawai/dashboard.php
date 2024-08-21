@@ -47,7 +47,6 @@ if ($pegawai_result->num_rows > 0) {
 
 // Tutup statement dan koneksi
 $stmt->close();
-$conn->close();
 
 function formatRupiah($angka){
     return 'Rp ' . number_format($angka, 0, ',', '.');
@@ -154,6 +153,23 @@ $current_page = basename($_SERVER['PHP_SELF']);
                             <td class="border px-2 py-1">Bonus</td>
                             <td class="border px-2 py-1"><?php echo formatRupiah($gaji['tot_bonus']); ?></td>
                         </tr>
+                        <?php
+                                $sql_bonus = "SELECT b.nama_bonus, g.nilai_bonus FROM gaji_bonus g 
+                                            JOIN bonus b ON g.id_bonus = b.id_bonus 
+                                            WHERE g.id_gaji = '" . $gaji['id_gaji'] . "'";
+                                $result_bonus = mysqli_query($conn, $sql_bonus);
+                                $no = 3;
+
+                                while($row_bonus = mysqli_fetch_assoc($result_bonus)) {
+                                ?>
+                                <tr>
+                                    <td class="border px-2 py-1 text-center"></td>
+                                    <td class="border px-2 py-1 text-slate-600"><?php echo htmlspecialchars($row_bonus['nama_bonus']); ?></td>
+                                    <td class="border px-2 py-1 text-slate-600"><?php echo formatRupiah($row_bonus['nilai_bonus']); ?></td>
+                                </tr>
+                            <?php
+                            }
+                            ?>
                         <tr>
                             <td class="border px-2 py-1 text-center">3</td>
                             <td class="border px-2 py-1">Lembur</td>
@@ -169,6 +185,21 @@ $current_page = basename($_SERVER['PHP_SELF']);
                             <td class="border px-2 py-1">Potongan</td>
                             <td class="border px-2 py-1"><?php echo formatRupiah($gaji['tot_potongan']); ?></td>
                         </tr>
+                        <?php
+                                $sql_potongan = "SELECT p.nama_potongan, g.nilai_potongan FROM gaji_potongan g 
+                                                JOIN potongan p ON g.id_potongan = p.id_potongan 
+                                                WHERE g.id_gaji = '" . $gaji['id_gaji'] . "'";
+                                $result_potongan = mysqli_query($conn, $sql_potongan);
+                                while($row_potongan = mysqli_fetch_assoc($result_potongan)) {
+                                ?>
+                                <tr>
+                                    <td class="border px-2 py-1 text-center"></td>
+                                    <td class="border px-2 py-1 text-slate-600"><?php echo htmlspecialchars($row_potongan['nama_potongan']); ?></td>
+                                    <td class="border px-2 py-1 text-slate-600  "><?php echo formatRupiah($row_potongan['nilai_potongan']); ?></td>
+                                </tr>
+                                <?php
+                                }
+                                ?>
                         <tr class="bg-gray-200">
                             <td class="border px-2 py-1 text-center">6</td>
                             <td class="border px-2 py-1 font-semibold">Gaji Bersih</td>

@@ -4,21 +4,16 @@ include('../components/koneksi.php');
 
 use Dompdf\Dompdf;
 
+$selected_pegawai = $_POST['pegawai'] ?? '';
+$selected_month = $_POST['month'] ?? '';
+$id_gaji = $_POST['id_gaji'] ?? '';
 
-$selected_pegawai = isset($_POST['pegawai']) ? $_POST['pegawai'] : '';
-$selected_month = isset($_POST['month']) ? $_POST['month'] : '';
-$id_gaji = isset($_POST['id_gaji']) ? $_POST['id_gaji'] : '';
-
-if (!$id_gaji) {
-    echo "<script>alert('ID Gaji tidak ditemukan.'); window.location.href='rincian_pegawai.php';</script>";
-    exit;
-}
-if (!$selected_pegawai || !$selected_month) {
-    echo "<script>alert('Pegawai atau bulan tidak dipilih.'); window.location.href='rincian_pegawai.php';</script>";
+if (!$id_gaji || !$selected_pegawai || !$selected_month) {
+    echo "<script>alert('Data tidak lengkap. ID Gaji, Pegawai, atau Bulan tidak dipilih.'); window.location.href='rincian_pegawai.php';</script>";
     exit;
 }
 
-// Mengambil data pegawai, termasuk nama jabatan dan nomor HP
+// Mengambil data pegawai
 $pegawai_sql = "
     SELECT p.*, j.nama_jabatan, j.gaji_pokok 
     FROM Pegawai p 
@@ -30,32 +25,49 @@ $stmt->bind_param('s', $selected_pegawai);
 $stmt->execute();
 $pegawai_result = $stmt->get_result();
 
-if ($pegawai_result->num_rows > 0) {
-    $pegawai = $pegawai_result->fetch_assoc();
-
-    // Mengambil data gaji berdasarkan bulan yang dipilih
-    $gaji_sql = "SELECT * FROM Gaji WHERE id_gaji = ? AND MONTH(tgl_gaji) = ?";
-    $stmt = $conn->prepare($gaji_sql);
-    $stmt->bind_param('ss', $id_gaji, $selected_month);
-    $stmt->execute();
-    $gaji_result = $stmt->get_result();
-
-    if ($gaji_result->num_rows > 0) {
-        $gaji = $gaji_result->fetch_assoc();
-    } else {
-        $gaji = null;
-    }
-} else {
+if ($pegawai_result->num_rows === 0) {
     echo "<script>alert('Pegawai tidak ditemukan.'); window.location.href='rincian_pegawai.php';</script>";
     exit;
 }
+$pegawai = $pegawai_result->fetch_assoc();
+
+// Mengambil data gaji berdasarkan bulan yang dipilih
+$gaji_sql = "SELECT * FROM Gaji WHERE id_gaji = ? AND MONTH(tgl_gaji) = ?";
+$stmt = $conn->prepare($gaji_sql);
+$stmt->bind_param('ss', $id_gaji, $selected_month);
+$stmt->execute();
+$gaji_result = $stmt->get_result();
+
+if ($gaji_result->num_rows === 0) {
+    echo "<script>alert('Gaji tidak ditemukan untuk bulan yang dipilih.'); window.location.href='rincian_pegawai.php';</script>";
+    exit;
+}
+$gaji = $gaji_result->fetch_assoc();
+
+// Mengambil data bonus dan potongan
+$sql_bonus = "SELECT b.nama_bonus, g.nilai_bonus FROM gaji_bonus g 
+              JOIN bonus b ON g.id_bonus = b.id_bonus 
+              WHERE g.id_gaji = ?";
+$stmt_bonus = $conn->prepare($sql_bonus);
+$stmt_bonus->bind_param('s', $id_gaji);
+$stmt_bonus->execute();
+$result_bonus = $stmt_bonus->get_result();
+
+$sql_potongan = "SELECT p.nama_potongan, g.nilai_potongan FROM gaji_potongan g 
+                 JOIN potongan p ON g.id_potongan = p.id_potongan 
+                 WHERE g.id_gaji = ?";
+$stmt_potongan = $conn->prepare($sql_potongan);
+$stmt_potongan->bind_param('s', $id_gaji);
+$stmt_potongan->execute();
+$result_potongan = $stmt_potongan->get_result();
 
 $stmt->close();
 $conn->close();
 
-function formatRupiah($angka){
+function formatRupiah($angka) {
     return 'Rp ' . number_format($angka, 0, ',', '.');
 }
+
 function getNamaBulan($bulan) {
     $nama_bulan = [
         '01' => 'Januari',
@@ -71,49 +83,36 @@ function getNamaBulan($bulan) {
         '11' => 'November',
         '12' => 'Desember'
     ];
-    return $nama_bulan[$bulan];
+    return $nama_bulan[$bulan] ?? '';
 }
 
-
-// Tidak boleh ada output sebelum ini!
+// Generate HTML untuk PDF
 $dompdf = new Dompdf();
 
 $html = '
-<h2>Slip Gaji</h2>
-<h3>Profil Pegawai</h3>
-<p><strong>Nama Pegawai:</strong> ' . htmlspecialchars($pegawai['nama_pegawai']) . '</p>
-<p><strong>Jabatan:</strong> ' . htmlspecialchars($pegawai['nama_jabatan']) . '</p>
-<p><strong>No. HP:</strong> ' . htmlspecialchars($pegawai['no_hp']) . '</p>
-
-<h3>Rincian Gaji</h3>
-';
-
-if ($gaji) {
-    $gaji_kotor = $gaji['gaji_pokok'] + $gaji['gaji_lembur'] + $gaji['tot_bonus'];
-    $html = '
 <h1 style="text-align: center; font-size: 24px; margin-bottom: 5px;">SIMONT MART</h1>
 <h2 style="text-align: center; font-size: 18px; margin-top: 0;">Slip Gaji Pegawai</h2>
 
 <div style="margin-top: 20px;">
     <table style="width: 100%; border-collapse: collapse;">
         <tr>
-            <td style="width: 5%;"><strong>Periode</strong></td>
+            <td style="width: 20%;"><strong>Periode</strong></td>
             <td style="width: 5%;"><strong>:</strong></td>
             <td>' . htmlspecialchars(getNamaBulan($selected_month)) . '</td>
         </tr>
         <tr>
             <td><strong>Nama</strong></td>
-            <td ><strong>:</strong></td>
+            <td><strong>:</strong></td>
             <td>' . htmlspecialchars($pegawai['nama_pegawai']) . '</td>
         </tr>
         <tr>
             <td><strong>Jabatan</strong></td>
-            <td ><strong>:</strong></td>
+            <td><strong>:</strong></td>
             <td>' . htmlspecialchars($pegawai['nama_jabatan']) . '</td>
         </tr>
         <tr>
             <td><strong>No. HP</strong></td>
-            <td ><strong>:</strong></td>
+            <td><strong>:</strong></td>
             <td>' . htmlspecialchars($pegawai['no_hp']) . '</td>
         </tr>
     </table>
@@ -138,23 +137,51 @@ if ($gaji) {
             <td>Bonus</td>
             <td style="text-align:right;">' . formatRupiah($gaji['tot_bonus']) . '</td>
         </tr>
+';
+
+$no = 3;
+
+while ($row_bonus = $result_bonus->fetch_assoc()) {
+    $html .= '
         <tr>
-            <td style="text-align:center;">3</td>
+            <td style="text-align:center; color: #475569"></td>
+            <td style="color: #475569">' . htmlspecialchars($row_bonus['nama_bonus']) . '</td>
+            <td style="text-align:right; color: #475569">' . formatRupiah($row_bonus['nilai_bonus']) . '</td>
+        </tr>
+    ';
+}
+
+$html .= '
+        <tr>
+            <td style="text-align:center;">' . $no++ . '</td>
             <td>Lembur</td>
             <td style="text-align:right;">' . formatRupiah($gaji['gaji_lembur']) . '</td>
         </tr>
         <tr style="background-color: #e6e6e6;">
-            <td style="text-align:center;">4</td>
+            <td style="text-align:center;">' . $no++ . '</td>
             <td><strong>Gaji Kotor</strong></td>
-            <td style="text-align:right;"><strong>' . formatRupiah($gaji_kotor) . '</strong></td>
+            <td style="text-align:right;"><strong>' . formatRupiah($gaji['gaji_pokok'] + $gaji['gaji_lembur'] + $gaji['tot_bonus']) . '</strong></td>
         </tr>
         <tr>
-            <td style="text-align:center;">5</td>
+            <td style="text-align:center;">' . $no++ . '</td>
             <td>Potongan</td>
             <td style="text-align:right;">' . formatRupiah($gaji['tot_potongan']) . '</td>
         </tr>
+';
+
+while ($row_potongan = $result_potongan->fetch_assoc()) {
+    $html .= '
+        <tr>
+            <td style="text-align:center; color: #475569"> </td>
+            <td style="color: #475569">' . htmlspecialchars($row_potongan['nama_potongan']) . '</td>
+            <td style="text-align:right; color: #475569">' . formatRupiah($row_potongan['nilai_potongan']) . '</td>
+        </tr>
+    ';
+}
+
+$html .= '
         <tr style="background-color: #e6e6e6;">
-            <td style="text-align:center;">6</td>
+            <td style="text-align:center;">' . $no++ . '</td>
             <td><strong>Gaji Bersih</strong></td>
             <td style="text-align:right;"><strong>' . formatRupiah($gaji['tot_gaji']) . '</strong></td>
         </tr>
@@ -167,20 +194,10 @@ if ($gaji) {
 </div>
 ';
 
-} else {
-    $html .= '<p>Gaji tidak ditemukan untuk bulan yang dipilih.</p>';
-}
-
-
 $dompdf->loadHtml($html);
-
 $dompdf->setPaper('A4', 'portrait');
-
 $dompdf->render();
 
-if ($gaji) {
-    $dompdf->stream("slip_gaji_" . $pegawai['nama_pegawai'] . "_" . date('d-m-Y', strtotime($gaji['tgl_gaji'])) . ".pdf", array("Attachment" => 1));
-} else {
-    echo "<script>alert('Gagal mencetak PDF, gaji tidak ditemukan'); window.location.href='rincian_pegawai.php';</script>";
-}
+$dompdf->stream("slip_gaji_" . $pegawai['nama_pegawai'] . "_" . date('d-m-Y', strtotime($gaji['tgl_gaji'])) . ".pdf", ["Attachment" => 1]);
+
 ?>

@@ -96,88 +96,124 @@ function formatRupiah($number) {
         </form>
 
 <!-- Menampilkan Slip Gaji sesuai pegawai dan bulan yang dipilih -->
-        <?php if ($gaji) { 
-            foreach ($gaji as $slip) { 
-                $gaji_kotor = $slip['gaji_pokok'] + $slip['gaji_lembur'] + $slip['tot_bonus'];
-        ?>
-            <div class="bg-white max-w-4xl p-4 rounded-lg shadow-lg mb-6">
-                <h1 class="text-center font-bold text-xl">SIMONT MART</h1>
-                <h2 class="text-center text-lg">Slip Gaji Pegawai</h2>
-
-                <div class="flex justify-between mt-4">
-                    <div>
-                        <p>Periode: <?php echo  htmlspecialchars(getNamaBulan($selected_month)); ?></p>
-                        <p>Nama: <?php echo htmlspecialchars($slip['nama_pegawai']); ?></p>
-                        <p>Jabatan: <?php echo htmlspecialchars($slip['nama_jabatan']); ?></p>
-                        <p>No HP: <?php echo htmlspecialchars($slip['no_hp']); ?></p>
-                    </div>
-                    <div >
-                        <form method="POST" action="cetak_slip.php" class="mt-4">
-                            <input type="hidden" name="pegawai" value="<?php echo $selected_pegawai; ?>">
-                            <input type="hidden" name="month" value="<?php echo $selected_month; ?>">
-                            <input type="hidden" name="id_gaji" value="<?php echo $slip['id_gaji']; ?>">
-                            <button type="submit" name="cetak" class="bg-green-500 cetak-pdf-btn text-white px-3 py-1 rounded hover:bg-green-600">Cetak PDF</button>
-                        </form>
-                    </div>
-                </div>
-
-                <table class="w-full mt-4 border-collapse border">
-                    <thead>
-                        <tr>
-                            <th class="border px-2 py-1">NO</th>
-                            <th class="border px-2 py-1">Ket</th>
-                            <th class="border px-2 py-1">Jumlah</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="border px-2 py-1 text-center">1</td>
-                            <td class="border px-2 py-1">Gaji Pokok</td>
-                            <td class="border px-2 py-1"><?php echo formatRupiah($slip['gaji_pokok']); ?></td>
-                        </tr>
-                        <tr>
-                            <td class="border px-2 py-1 text-center">2</td>
-                            <td class="border px-2 py-1">Bonus</td>
-                            <td class="border px-2 py-1"><?php echo formatRupiah($slip['tot_bonus']); ?></td>
-                        </tr>
-                        <tr>
-                            <td class="border px-2 py-1 text-center">3</td>
-                            <td class="border px-2 py-1">Lembur</td>
-                            <td class="border px-2 py-1"><?php echo formatRupiah($slip['gaji_lembur']); ?></td>
-                        </tr>
-                        <tr class="bg-gray-200">
-                            <td class="border px-2 py-1 text-center">4</td>
-                            <td class="border px-2 py-1 font-semibold">Gaji Kotor</td>
-                            <td class="border px-2 py-1 font-semibold"><?php echo formatRupiah($gaji_kotor); ?></td>
-                        </tr>
-                        <tr>
-                            <td class="border px-2 py-1 text-center">5</td>
-                            <td class="border px-2 py-1">Potongan</td>
-                            <td class="border px-2 py-1"><?php echo formatRupiah($slip['tot_potongan']); ?></td>
-                        </tr>
-                        <tr class="bg-gray-200">
-                            <td class="border px-2 py-1 text-center">6</td>
-                            <td class="border px-2 py-1 font-semibold">Gaji Bersih</td>
-                            <td class="border px-2 py-1 font-semibold"><?php echo formatRupiah($slip['tot_gaji']); ?></td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <div class="mt-4 px-6 flex justify-end">
-                    <div class="flex flex-col justify-center items-center h-full">
-                        <p>Diterima Oleh:</p>
-                        <p class="mt-16 mx-auto"><?php echo htmlspecialchars($slip['nama_pegawai']); ?></p>
-                    </div>
-                </div>
-            </div>
         <?php 
-            } 
-        } else if ($selected_pegawai && $selected_month) {
-            echo '<p class="text-red-500">Data gaji tidak ditemukan untuk pegawai dan bulan yang dipilih.</p>';
-        } else {
-            echo '<p class="text-gray-500">Silahkan pilih pegawai dan periode.</p>';
-        }
+            if ($gaji) { 
+                foreach ($gaji as $slip) { 
+                    $gaji_kotor = $slip['gaji_pokok'] + $slip['gaji_lembur'] + $slip['tot_bonus'];
         ?>
-    </div>
+                <div class="bg-white max-w-4xl p-4 rounded-lg shadow-lg mb-6">
+                    <h1 class="text-center font-bold text-xl">SIMONT MART</h1>
+                    <h2 class="text-center text-lg">Slip Gaji Pegawai</h2>
+
+                    <div class="flex justify-between mt-4">
+                        <div>
+                            <p>Periode: <?php echo htmlspecialchars(getNamaBulan($selected_month)); ?></p>
+                            <p>Nama: <?php echo htmlspecialchars($slip['nama_pegawai']); ?></p>
+                            <p>Jabatan: <?php echo htmlspecialchars($slip['nama_jabatan']); ?></p>
+                            <p>No HP: <?php echo htmlspecialchars($slip['no_hp']); ?></p>
+                        </div>
+                        <div>
+                            <form method="POST" action="cetak_slip.php" class="mt-4">
+                                <input type="hidden" name="pegawai" value="<?php echo $selected_pegawai; ?>">
+                                <input type="hidden" name="month" value="<?php echo $selected_month; ?>">
+                                <input type="hidden" name="id_gaji" value="<?php echo $slip['id_gaji']; ?>">
+                                <button type="submit" name="cetak" class="bg-green-500 cetak-pdf-btn text-white px-3 py-1 rounded hover:bg-green-600">Cetak PDF</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <table class="w-full mt-4 border-collapse border">
+                        <thead>
+                            <tr>
+                                <th class="border px-2 py-1">NO</th>
+                                <th class="border px-2 py-1">Ket</th>
+                                <th class="border px-2 py-1">Jumlah</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="border px-2 py-1 text-center">1</td>
+                                <td class="border px-2 py-1">Gaji Pokok</td>
+                                <td class="border px-2 py-1"><?php echo formatRupiah($slip['gaji_pokok']); ?></td>
+                            </tr>
+                            <tr>
+                                <td class="border px-2 py-1 text-center">2</td>
+                                <td class="border px-2 py-1">Bonus</td>
+                                <td class="border px-2 py-1"><?php echo formatRupiah($slip['tot_bonus']); ?></td>
+                            </tr>
+                            
+                            <?php
+                                $sql_bonus = "SELECT b.nama_bonus, g.nilai_bonus FROM gaji_bonus g 
+                                            JOIN bonus b ON g.id_bonus = b.id_bonus 
+                                            WHERE g.id_gaji = '" . $slip['id_gaji'] . "'";
+                                $result_bonus = mysqli_query($conn, $sql_bonus);
+                                $no = 3;
+
+                                while($row_bonus = mysqli_fetch_assoc($result_bonus)) {
+                                ?>
+                                <tr>
+                                    <td class="border px-2 py-1 text-center"></td>
+                                    <td class="border px-2 py-1 text-slate-600"><?php echo htmlspecialchars($row_bonus['nama_bonus']); ?></td>
+                                    <td class="border px-2 py-1 text-slate-600"><?php echo formatRupiah($row_bonus['nilai_bonus']); ?></td>
+                                </tr>
+                            <?php
+                            }
+                            ?>
+                            
+                            <tr>
+                                <td class="border px-2 py-1 text-center"><?php echo $no++; ?></td>
+                                <td class="border px-2 py-1">Lembur</td>
+                                <td class="border px-2 py-1"><?php echo formatRupiah($slip['gaji_lembur']); ?></td>
+                            </tr>
+                            <tr class="bg-gray-200">
+                                <td class="border px-2 py-1 text-center"><?php echo $no++; ?></td>
+                                <td class="border px-2 py-1 font-semibold">Gaji Kotor</td>
+                                <td class="border px-2 py-1 font-semibold"><?php echo formatRupiah($gaji_kotor); ?></td>
+                            </tr>
+                            <tr>
+                                <td class="border px-2 py-1 text-center"><?php echo $no++; ?></td>
+                                <td class="border px-2 py-1">Potongan</td>
+                                <td class="border px-2 py-1"><?php echo formatRupiah($slip['tot_potongan']); ?></td>
+                            </tr>
+                            <?php
+                                $sql_potongan = "SELECT p.nama_potongan, g.nilai_potongan FROM gaji_potongan g 
+                                                JOIN potongan p ON g.id_potongan = p.id_potongan 
+                                                WHERE g.id_gaji = '" . $slip['id_gaji'] . "'";
+                                $result_potongan = mysqli_query($conn, $sql_potongan);
+                                while($row_potongan = mysqli_fetch_assoc($result_potongan)) {
+                                ?>
+                                <tr>
+                                    <td class="border px-2 py-1 text-center"></td>
+                                    <td class="border px-2 py-1 text-slate-600"><?php echo htmlspecialchars($row_potongan['nama_potongan']); ?></td>
+                                    <td class="border px-2 py-1 text-slate-600  "><?php echo formatRupiah($row_potongan['nilai_potongan']); ?></td>
+                                </tr>
+                                <?php
+                                }
+                                ?>
+                            <tr class="bg-gray-200">
+                                <td class="border px-2 py-1 text-center"><?php echo $no++; ?></td>
+                                <td class="border px-2 py-1 font-semibold">Gaji Bersih</td>
+                                <td class="border px-2 py-1 font-semibold"><?php echo formatRupiah($slip['tot_gaji']); ?></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="mt-4 px-6 flex justify-end">
+                        <div class="flex flex-col justify-center items-center h-full">
+                            <p>Diterima Oleh:</p>
+                            <p class="mt-16 mx-auto"><?php echo htmlspecialchars($slip['nama_pegawai']); ?></p>
+                        </div>
+                    </div>
+                </div>
+        <?php 
+                } 
+            } else if ($selected_pegawai && $selected_month) {
+                echo '<p class="text-red-500">Data gaji tidak ditemukan untuk pegawai dan bulan yang dipilih.</p>';
+            } else {
+                echo '<p class="text-gray-500">Silahkan pilih pegawai dan periode.</p>';
+            }
+        ?>
+        </div>
+
 </div>
 <?php include('../components/footer.php'); ?>
