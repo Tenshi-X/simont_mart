@@ -35,16 +35,6 @@ if($potongan_kehadiran != 0){
     $id_tidak_hadir = NULL;
 }
 
-if($potongan_keterlambatan_per_jam == 14102){
-    $id_keterlambatan = 3;
-} else if($potongan_keterlambatan_per_jam == 11965){
-    $id_keterlambatan = 4;
-} else if($potongan_keterlambatan_per_jam == 11111){
-    $id_keterlambatan = 5;
-} else {
-    $id_keterlambatan = 6;
-}
-
 if($tot_potongan != 0){
     $id_kerugian = 2;
 } else {
@@ -57,14 +47,18 @@ if($bonus_kinerja != 0){
     $id_bonus_kinerja = 5;
 }
 
-if($nama_jabatan == "kepala toko"){
+if($nama_jabatan == "Kepala Toko"){
     $id_bonus_jabatan = 3;
-} else if($nama_jabatan == "bendahara") {
+    $id_keterlambatan = 3;
+} else if($nama_jabatan == "Bendahara") {
     $id_bonus_jabatan = 4;
-} else if($nama_jabatan == "pramuniaga") {
+    $id_keterlambatan = 4;
+} else if($nama_jabatan == "Pramuniaga") {
     $id_bonus_jabatan = 7;
-} else if($nama_jabatan == "kasir") {
+    $id_keterlambatan = 6;
+} else if($nama_jabatan == "Kasir") {
     $id_bonus_jabatan = 6;
+    $id_keterlambatan = 5;
 }
 
 $potongan_keterlambatan = $potongan_keterlambatan_per_jam * $keterlambatan;
@@ -105,13 +99,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
             if ($id_keterlambatan !== NULL) {
                 $stmt_potongan = $conn->prepare("INSERT INTO gaji_potongan (id_gaji, id_potongan, nilai_potongan, tgl_gaji) VALUES (?, ?, ?, ?)");
-                $stmt_potongan->bind_param("iiss", $id_gaji, $id_keterlambatan, $keterlambatan, $tgl_gaji);
+                $stmt_potongan->bind_param("iiss", $id_gaji, $id_keterlambatan, $potongan_keterlambatan, $tgl_gaji);
                 $stmt_potongan->execute();
             }
 
             if ($id_tidak_hadir !== NULL) {
                 $stmt_potongan = $conn->prepare("INSERT INTO gaji_potongan (id_gaji, id_potongan, nilai_potongan, tgl_gaji) VALUES (?, ?, ?, ?)");
-                $stmt_potongan->bind_param("iiss", $id_gaji, $id_tidak_hadir,$potongan_absen , $tgl_gaji);
+                $stmt_potongan->bind_param("iiss", $id_gaji, $id_tidak_hadir, $potongan_kehadiran , $tgl_gaji);
                 $stmt_potongan->execute();
             }
 
