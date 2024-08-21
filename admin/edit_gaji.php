@@ -164,7 +164,7 @@ $bonus_jabatan = $conn->query("SELECT id_bonus, nama_bonus, jumlah_bonus FROM bo
                     <input type="date" id="tgl_gaji_manual" name="tgl_gaji_manual" class="mt-1 block w-full px-2 py-2 border border-black rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
             </div>
             </div>
-            <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            <button type="submit" class="inline-flex items-center px-4 mt-3 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 Submit
             </button>
         </form>

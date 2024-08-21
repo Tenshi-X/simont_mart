@@ -21,7 +21,7 @@ $result = $conn->query($sql);
     <div class="lg:w-1/5">
         <?php include('sidebar.php'); ?>
     </div>
-    <div class="container mx-4  lg:w-4/5 py-4">
+    <div class="container mx-auto  lg:w-4/5 py-4">
         <h2 class="text-2xl font-semibold mb-4">Data Pegawai</h2>
         <form method="GET" class="mb-4">
              <input type="text" name="search" placeholder="Cari Nama Pegawai" class="border p-2 rounded" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
