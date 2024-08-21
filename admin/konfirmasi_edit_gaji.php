@@ -18,16 +18,20 @@ $tot_bonus = isset($_GET['tot_bonus']) ? $_GET['tot_bonus'] : '';
 $tot_potongan = isset($_GET['tot_potongan']) ? $_GET['tot_potongan'] : '';
 $keterlambatan = isset($_GET['keterlambatan']) ? $_GET['keterlambatan'] : '';
 
+// Ambil id_jabatan berdasarkan id_pegawai
+$id_jabatan_query = $conn->query("SELECT id_jabatan FROM Pegawai WHERE id_pegawai = '$id_pegawai'");
+$id_jabatan_result = $id_jabatan_query->fetch_assoc();
+$id_jabatan = $id_jabatan_result['id_jabatan'];
+
 // Hitung total potongan tambahan jika kehadiran kurang dari 26 hari
 $potongan_kehadiran = 0;
 $potongan_kerugian = $tot_potongan;
 $potongan_per_hari = 100000;
 $potongan_keterlambatan_per_jam = (($gaji_pokok / 26) / 9);
 
-if($tot_potongan != 0){
+if ($tot_potongan != 0) {
     $presentase = 15;
-}
-else{
+} else {
     $presentase = 0;
 }
 
@@ -35,45 +39,39 @@ if ($jumlah_hadir < 26) {
     $potongan_kehadiran = (26 - $jumlah_hadir) * $potongan_per_hari;
 }
 
-if($potongan_kehadiran != 0){
+if ($potongan_kehadiran != 0) {
     $id_tidak_hadir = 7;
 } else {
     $id_tidak_hadir = NULL;
 }
 
-if($potongan_keterlambatan_per_jam == 14102){
+if ($id_jabatan == 4) {
+    $id_bonus_jabatan = 3;
     $id_keterlambatan = 3;
-} else if($potongan_keterlambatan_per_jam == 11965){
+} else if ($id_jabatan == 5) {
+    $id_bonus_jabatan = 4;
     $id_keterlambatan = 4;
-} else if($potongan_keterlambatan_per_jam == 11111){
+} else if ($id_jabatan == 6) {
+    $id_bonus_jabatan = 6;
     $id_keterlambatan = 5;
-} else {
+} else if ($id_jabatan == 7) {
+    $id_bonus_jabatan = 7;
     $id_keterlambatan = 6;
 }
 
-if($tot_potongan != 0){
+if ($tot_potongan != 0) {
     $id_kerugian = 2;
 } else {
     $id_kerugian = NULL;
 }
 
-if($bonus_kinerja != 0){
+if ($bonus_kinerja != 0) {
     $id_bonus_kinerja = 2;
 } else {
     $id_bonus_kinerja = 5;
 }
 
-if($bonus_jabatan == 250000){
-    $id_bonus_jabatan = 3;
-} else if($bonus_jabatan == 200000) {
-    $id_bonus_jabatan = 4;
-}
-else{
-    $id_bonus_jabatan = 5;
-}
-
 $potongan_keterlambatan = $potongan_keterlambatan_per_jam * $keterlambatan;
-// Ambil potongan kerugian barang dari input user
 
 // Perhitungan total potongan
 $tot_potongan_final = $potongan_kehadiran + $potongan_kerugian + $potongan_keterlambatan;
@@ -105,7 +103,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         tot_gaji = '$tot_gaji'
                     WHERE id_gaji = '$id_gaji'";
     if ($conn->query($sql) === TRUE) {
-        $id_gaji = $conn->insert_id;
         $status = "Pencatatan berhasil";
         $alert_color = "bg-green-100 border-green-400 text-green-700";
         $redirect = true;
@@ -114,17 +111,56 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $alert_color = "bg-red-100 border-red-400 text-red-700";
     }
 
-    // Cek apakah data id_gaji dan id_potongan sudah ada di gaji_potongan
-    $conn->query("UPDATE gaji_potongan SET tgl_gaji = '$tgl_gaji' WHERE id_gaji = '$id_gaji' AND id_potongan = '$id_kerugian'");
-    $conn->query("UPDATE gaji_potongan SET tgl_gaji = '$tgl_gaji' WHERE id_gaji = '$id_gaji' AND id_potongan = '$id_keterlambatan'");
-    $conn->query("UPDATE gaji_potongan SET tgl_gaji = '$tgl_gaji' WHERE id_gaji = '$id_gaji' AND id_potongan = '$id_tidak_hadir'");
-    $conn->query("UPDATE gaji_bonus SET tgl_gaji = '$tgl_gaji' WHERE id_gaji = '$id_gaji' AND id_bonus = '$id_bonus_kinerja'");
-    $conn->query("UPDATE gaji_bonus SET tgl_gaji = '$tgl_gaji' WHERE id_gaji = '$id_gaji' AND id_bonus = '$id_bonus_jabatan'");
+    // Update gaji_potongan
+    $potongan_data = [
+        'kerugian' => [$id_kerugian, $potongan_kerugian],
+        'keterlambatan' => [$id_keterlambatan, $potongan_keterlambatan],
+        'tidak_hadir' => [$id_tidak_hadir, $potongan_kehadiran]
+    ];
 
+    foreach ($potongan_data as $potongan) {
+        if ($potongan[0] !== NULL) {
+            $sql = "SELECT * FROM gaji_potongan WHERE id_gaji = '$id_gaji' AND id_potongan = '{$potongan[0]}'";
+            $result = $conn->query($sql);
+
+            if ($result->num_rows > 0) {
+                $sql = "UPDATE gaji_potongan SET nilai_potongan = '{$potongan[1]}', tgl_gaji = '$tgl_gaji' 
+                        WHERE id_gaji = '$id_gaji' AND id_potongan = '{$potongan[0]}'";
+            } else {
+                $sql = "INSERT INTO gaji_potongan (id_gaji, id_potongan, nilai_potongan, tgl_gaji) 
+                        VALUES ('$id_gaji', '{$potongan[0]}', '{$potongan[1]}', '$tgl_gaji')";
+            }
+            $conn->query($sql);
+        }
+    }
+
+    // Update gaji_bonus
+    $bonus_data = [
+        'kinerja' => [$id_bonus_kinerja, $bonus_kinerja],
+        'jabatan' => [$id_bonus_jabatan, $bonus_jabatan]
+    ];
+
+    foreach ($bonus_data as $bonus) {
+        if ($bonus[0] !== NULL) {
+            $sql = "SELECT * FROM gaji_bonus WHERE id_gaji = '$id_gaji' AND id_bonus = '{$bonus[0]}'";
+            $result = $conn->query($sql);
+
+            if ($result->num_rows > 0) {
+                $sql = "UPDATE gaji_bonus SET nilai_bonus = '{$bonus[1]}', tgl_gaji = '$tgl_gaji' 
+                        WHERE id_gaji = '$id_gaji' AND id_bonus = '{$bonus[0]}'";
+            } else {
+                $sql = "INSERT INTO gaji_bonus (id_gaji, id_bonus, nilai_bonus, tgl_gaji) 
+                        VALUES ('$id_gaji', '{$bonus[0]}', '{$bonus[1]}', '$tgl_gaji')";
+            }
+            $conn->query($sql);
+        }
+    }
 }
 
 $employees = $conn->query("SELECT * FROM Pegawai");
 ?>
+
+
 
 
 <div class="flex flex-col lg:flex-row">

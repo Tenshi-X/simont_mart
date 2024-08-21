@@ -32,12 +32,17 @@ if (isset($_GET['id'])) {
     
         // Hitung gaji_lembur
         $gaji_lembur = $jumlah_lembur * 50000;
-    
+
+        // Ambil id_jabatan berdasarkan id_pegawai
+        $id_jabatan_query = $conn->query("SELECT id_jabatan FROM Pegawai WHERE id_pegawai = '$id_pegawai'");
+        $id_jabatan_result = $id_jabatan_query->fetch_assoc();
+        $id_jabatan = $id_jabatan_result['id_jabatan'];
+
         // Hitung tot_potongan
-        if ($kerugian_barang >= 120000) {
-            $tot_potongan = (15*$kerugian_barang)/100;
+        if ($id_jabatan != 4 && $id_jabatan != 5 && $kerugian_barang >= 120000) {
+        $tot_potongan = (15 * $kerugian_barang) / 100;
         } else {
-            $tot_potongan = 0;
+        $tot_potongan = 0;
         }
     
         // Hitung tot_gaji
