@@ -8,7 +8,8 @@ date_default_timezone_set('Asia/Jakarta');
 // Tangkap data yang dikirim dari tambah_gaji.php
 $id_pegawai = isset($_GET['id_pegawai']) ? $_GET['id_pegawai'] : '';
 $jumlah_hadir = isset($_GET['jumlah_hadir']) ? $_GET['jumlah_hadir'] : '';
-$tgl_gaji = date('Y-m-d H:i:s'); // Otomatis dengan waktu sekarang di GMT+7
+$nama_jabatan= isset($_GET['nama_jabatan']) ? $_GET['nama_jabatan'] : '';
+$tgl_gaji = isset($_GET['tgl_gaji']) ? $_GET['tgl_gaji'] : '';
 $gaji_pokok = isset($_GET['gaji_pokok']) ? $_GET['gaji_pokok'] : '';
 $gaji_lembur = isset($_GET['gaji_lembur']) ? $_GET['gaji_lembur'] : '';
 $bonus_kinerja = isset($_GET['bonus_kinerja']) ? $_GET['bonus_kinerja'] : '';
@@ -22,13 +23,7 @@ $potongan_kehadiran = 0;
 $potongan_kerugian = $tot_potongan;
 $potongan_per_hari = 100000;
 $potongan_keterlambatan_per_jam = (($gaji_pokok / 26) / 9);
-
-if($tot_potongan != 0){
-    $presentase = 15;
-}
-else{
-    $presentase = 0;
-}
+$potongan_absen = 26 - $jumlah_hadir;
 
 if ($jumlah_hadir < 26) {
     $potongan_kehadiran = (26 - $jumlah_hadir) * $potongan_per_hari;
@@ -62,13 +57,14 @@ if($bonus_kinerja != 0){
     $id_bonus_kinerja = 5;
 }
 
-if($bonus_jabatan == 250000){
+if($nama_jabatan == "kepala toko"){
     $id_bonus_jabatan = 3;
-} else if($bonus_jabatan == 200000) {
+} else if($nama_jabatan == "bendahara") {
     $id_bonus_jabatan = 4;
-}
-else{
-    $id_bonus_jabatan = 5;
+} else if($nama_jabatan == "pramuniaga") {
+    $id_bonus_jabatan = 7;
+} else if($nama_jabatan == "kasir") {
+    $id_bonus_jabatan = 6;
 }
 
 $potongan_keterlambatan = $potongan_keterlambatan_per_jam * $keterlambatan;
@@ -84,52 +80,58 @@ $redirect = false;
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id_pegawai = $_POST['id_pegawai'];
     $jumlah_hadir = $_POST['jumlah_hadir'];
-    $tgl_gaji = isset($_GET['tgl_gaji']) ? $_GET['tgl_gaji'] . ' ' . date('H:i:s') : date('Y-m-d H:i:s');
+    $tgl_gaji = isset($_POST['tgl_gaji']) ? $_POST['tgl_gaji'] . ' ' . date('H:i:s') : date('Y-m-d H:i:s');
     $gaji_pokok = $_POST['gaji_pokok'];
     $gaji_lembur = $_POST['gaji_lembur'];
     $tot_bonus = $_POST['tot_bonus'];
     $tot_potongan = $_POST['tot_potongan'];
     $tot_gaji = $_POST['tot_gaji'];
 
-    $sql = "INSERT INTO Gaji (id_pegawai, jumlah_hadir, tgl_gaji, gaji_pokok, gaji_lembur, tot_bonus, tot_potongan, tot_gaji) 
-            VALUES ('$id_pegawai', '$jumlah_hadir', '$tgl_gaji', '$gaji_pokok', '$gaji_lembur', '$tot_bonus', '$tot_potongan_final', '$tot_gaji')";
-    if ($conn->query($sql) === TRUE) {
+    $stmt = $conn->prepare("INSERT INTO Gaji (id_pegawai, jumlah_hadir, tgl_gaji, gaji_pokok, gaji_lembur, tot_bonus, tot_potongan, tot_gaji) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("iissdddd", $id_pegawai, $jumlah_hadir, $tgl_gaji, $gaji_pokok, $gaji_lembur, $tot_bonus, $tot_potongan_final, $tot_gaji);
+
+    if ($stmt->execute()) {
         $id_gaji = $conn->insert_id;
         $status = "Pencatatan berhasil";
         $alert_color = "bg-green-100 border-green-400 text-green-700";
         $redirect = true;
+
+        if ($nama_jabatan !== "kepala toko" && $nama_jabatan !== "bendahara") {
+            if ($id_kerugian !== NULL) {
+                $stmt_potongan = $conn->prepare("INSERT INTO gaji_potongan (id_gaji, id_potongan, nilai_potongan, tgl_gaji) VALUES (?, ?, ?, ?)");
+                $stmt_potongan->bind_param("iiss", $id_gaji, $id_kerugian,$potongan_kerugian, $tgl_gaji);
+                $stmt_potongan->execute();
+            }
+        }
+            if ($id_keterlambatan !== NULL) {
+                $stmt_potongan = $conn->prepare("INSERT INTO gaji_potongan (id_gaji, id_potongan, nilai_potongan, tgl_gaji) VALUES (?, ?, ?, ?)");
+                $stmt_potongan->bind_param("iiss", $id_gaji, $id_keterlambatan, $keterlambatan, $tgl_gaji);
+                $stmt_potongan->execute();
+            }
+
+            if ($id_tidak_hadir !== NULL) {
+                $stmt_potongan = $conn->prepare("INSERT INTO gaji_potongan (id_gaji, id_potongan, nilai_potongan, tgl_gaji) VALUES (?, ?, ?, ?)");
+                $stmt_potongan->bind_param("iiss", $id_gaji, $id_tidak_hadir,$potongan_absen , $tgl_gaji);
+                $stmt_potongan->execute();
+            }
+
+            if ($bonus_kinerja != 0) {
+                $stmt_bonus = $conn->prepare("INSERT INTO gaji_bonus (id_gaji, id_bonus, nilai_bonus, tgl_gaji) VALUES (?, ?, ?, ?)");
+                $stmt_bonus->bind_param("iiss", $id_gaji, $id_bonus_kinerja,$bonus_kinerja , $tgl_gaji);
+                $stmt_bonus->execute();
+            }
+
+            if ($bonus_jabatan != 0) {
+                $stmt_bonus = $conn->prepare("INSERT INTO gaji_bonus (id_gaji, id_bonus, nilai_bonus, tgl_gaji) VALUES (?, ?, ?, ?)");
+                $stmt_bonus->bind_param("iiss", $id_gaji, $id_bonus_jabatan,$bonus_jabatan, $tgl_gaji);
+                $stmt_bonus->execute();
+            }
+      
     } else {
         $status = "Pencatatan gagal";
         $alert_color = "bg-red-100 border-red-400 text-red-700";
     }
-
-    if ($id_kerugian !== NULL) {
-        $conn->query("INSERT INTO gaji_potongan(id_gaji, id_potongan, tgl_gaji) 
-        VALUES ('$id_gaji','$id_kerugian', '$tgl_gaji')");
-    }
-    
-    if ($id_keterlambatan !== NULL) {
-        $conn->query("INSERT INTO gaji_potongan(id_gaji, id_potongan, tgl_gaji) 
-        VALUES ('$id_gaji','$id_keterlambatan', '$tgl_gaji')");
-    }
-    
-    if ($id_tidak_hadir !== NULL) {
-        $conn->query("INSERT INTO gaji_potongan(id_gaji, id_potongan, tgl_gaji) 
-        VALUES ('$id_gaji','$id_tidak_hadir', '$tgl_gaji')");
-    }
-
-    $bonus_kinerja_exists = $conn->query("SELECT id_bonus FROM bonus WHERE id_bonus = '$id_bonus_kinerja'")->num_rows > 0;
-
-    $bonus_jabatan_exists = $conn->query("SELECT id_bonus FROM bonus WHERE id_bonus = '$id_bonus_jabatan'")->num_rows > 0;
-
-if ($bonus_kinerja_exists) {
-    $conn->query("INSERT INTO gaji_bonus(id_gaji, id_bonus, tgl_gaji) 
-    VALUES ('$id_gaji','$id_bonus_kinerja', '$tgl_gaji')");
-}
-if ($bonus_jabatan_exists) {
-    $conn->query("INSERT INTO gaji_bonus(id_gaji, id_bonus, tgl_gaji) 
-    VALUES ('$id_gaji','$id_bonus_jabatan', '$tgl_gaji')");
-}
+    $stmt->close();
 }
 
 $employees = $conn->query("SELECT * FROM Pegawai");
@@ -165,7 +167,6 @@ $employees = $conn->query("SELECT * FROM Pegawai");
     </script>
     <?php endif; ?>
         <h2 class="text-2xl font-bold mb-6">Konfirmasi Pencatatan Penggajian</h2>
-        
         <form action="" method="POST" class="max-w-3xl py-4 bg-white rounded-lg">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="mb-1">
@@ -197,6 +198,9 @@ $employees = $conn->query("SELECT * FROM Pegawai");
                     <input type="text" id="tot_bonus_display" class="block w-full px-2 py-2 border border-black rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="<?php echo 'Rp ' . number_format($tot_bonus, 0, ',', '.'); ?>" readonly required>
                     <input type="hidden" id="tot_bonus" name="tot_bonus" value="<?php echo $tot_bonus; ?>">
                 </div>
+                <div class="mb-1">
+                    <input type="hidden" id="tgl_gaji" name="tgl_gaji" value="<?php echo $tgl_gaji; ?>">
+                </div>
                 <div class="mb-1 col-span-2">
                     <label for="tot_potongan" class="block text-sm font-medium text-gray-700">Total Potongan (Rp)</label>
                     <input type="text" id="tot_potongan_display" class="block w-full px-2 py-2 border border-black rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="<?php echo 'Rp ' . number_format($tot_potongan_final, 0, ',', '.'); ?>" readonly required>
@@ -207,21 +211,18 @@ $employees = $conn->query("SELECT * FROM Pegawai");
                     </p>
                     <p class="mt-2 text-sm text-gray-600">
                         Potongan Kerugian Barang: Rp <?php echo number_format($potongan_kerugian, 0, ',', '.'); ?> 
-                        (<?php echo $presentase ?>% dari kerugian barang)
+                        (15% dari Total Barang Hilang)
                     </p>
                     <p class="mt-2 text-sm text-gray-600">
                         Potongan keterlambatan: Rp <?php echo number_format($potongan_keterlambatan, 0, ',', '.'); ?> 
                         (<?php echo $keterlambatan; ?> jam terlambat x Rp <?php echo number_format($potongan_keterlambatan_per_jam, 0, ',', '.'); ?> per jam)
                     </p>
                 </div>
-
-
                 <div class="mb-4 col-span-2">
                     <label for="tot_gaji_display" class="block text-sm font-medium text-gray-700">Total Gaji</label>
                     <input type="text" id="tot_gaji_display" class="block w-full px-2 py-2 border border-black rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" value="<?php echo 'Rp ' . number_format($tot_gaji_final, 0, ',', '.'); ?>" readonly required>
                     <input type="hidden" id="tot_gaji" name="tot_gaji" value="<?php echo $tot_gaji_final; ?>">
                 </div>
-
             </div>
             <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 Submit

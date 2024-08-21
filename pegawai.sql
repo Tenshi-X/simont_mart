@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 14, 2024 at 05:51 AM
+-- Generation Time: Aug 21, 2024 at 05:49 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -61,7 +61,9 @@ INSERT INTO `bonus` (`id_bonus`, `nama_bonus`, `jumlah_bonus`) VALUES
 (2, 'Bonus Kinerja', 100000),
 (3, 'Bonus Jabatan Kepala Toko', 250000),
 (4, 'Bonus Jabatan Bendahara', 200000),
-(5, 'Tidak Ada Bonus', 0);
+(5, 'Tidak Ada Bonus', 0),
+(6, 'Bonus Jabatan Kasir', 75000),
+(7, 'Bonus Jabatan Pramuniaga', 75000);
 
 -- --------------------------------------------------------
 
@@ -73,7 +75,7 @@ CREATE TABLE `gaji` (
   `id_gaji` int(11) NOT NULL,
   `id_pegawai` int(11) NOT NULL,
   `jumlah_hadir` varchar(25) NOT NULL,
-  `tgl_gaji` datetime NOT NULL DEFAULT current_timestamp(),
+  `tgl_gaji` date NOT NULL DEFAULT current_timestamp(),
   `gaji_pokok` int(11) NOT NULL,
   `gaji_lembur` int(11) NOT NULL,
   `tot_bonus` int(11) NOT NULL,
@@ -86,16 +88,21 @@ CREATE TABLE `gaji` (
 --
 
 INSERT INTO `gaji` (`id_gaji`, `id_pegawai`, `jumlah_hadir`, `tgl_gaji`, `gaji_pokok`, `gaji_lembur`, `tot_bonus`, `tot_potongan`, `tot_gaji`) VALUES
-(25, 3, '24', '2024-08-10 10:17:25', 3300000, 250000, 350000, 314615, 3585385),
-(26, 3, '24', '2024-08-10 10:19:29', 3300000, 250000, 350000, 314615, 3585385),
-(27, 4, '23', '2024-08-07 10:22:03', 2800000, 200000, 300000, 371795, 2928205),
-(28, 3, '23', '2024-08-09 10:27:07', 3300000, 200000, 350000, 384615, 3465385),
-(29, 3, '23', '2024-08-09 10:28:34', 3300000, 200000, 350000, 384615, 3465385),
-(30, 3, '23', '2024-08-16 10:30:25', 3300000, 200000, 350000, 370513, 3479487),
-(31, 4, '23', '2024-08-08 10:33:06', 2800000, 200000, 350000, 359829, 2990171),
-(32, 3, '21', '2024-08-08 10:35:01', 3300000, 200000, 350000, 667949, 3182051),
-(33, 3, '23', '2024-08-08 10:36:46', 3300000, 250000, 350000, 384615, 3515385),
-(34, 3, '21', '2024-08-08 10:38:23', 3300000, 250000, 350000, 584615, 3315385);
+(25, 3, '24', '2024-08-10', 3300000, 250000, 350000, 314615, 3585385),
+(36, 8, '26', '2024-08-12', 2400000, 100000, 75000, 585083, 1989917),
+(37, 10, '26', '2024-08-20', 2400000, 150000, 175000, 410724, 2314276),
+(38, 3, '36', '2024-08-20', 3300000, 150000, 175000, 390212, 3234788),
+(39, 8, '23', '2024-08-31', 2400000, 100000, 75000, 368400, 2206600),
+(41, 4, '23', '2024-08-21', 2800000, 200000, 300000, 335897, 2964103),
+(42, 4, '24', '2024-06-21', 2800000, 250000, 300000, 259829, 3090171),
+(43, 3, '21', '2024-08-21', 3300000, 150000, 250000, 556410, 3143590),
+(44, 3, '21', '2024-08-21', 3300000, 150000, 350000, 1070679, 2729321),
+(45, 4, '23', '2020-05-31', 2800000, 200000, 300000, 323932, 2976068),
+(46, 4, '21', '2022-04-30', 2800000, 200000, 300000, 559829, 2740171),
+(47, 9, '24', '2021-01-31', 2600000, 150000, 175000, 274444, 2650556),
+(48, 9, '3', '2024-01-31', 2600000, 200000, 175000, 2385556, 589444),
+(49, 9, '3', '2024-01-31', 2600000, 200000, 175000, 2385556, 589444),
+(50, 9, '3', '2024-01-31', 2600000, 200000, 175000, 2385556, 589444);
 
 -- --------------------------------------------------------
 
@@ -106,6 +113,7 @@ INSERT INTO `gaji` (`id_gaji`, `id_pegawai`, `jumlah_hadir`, `tgl_gaji`, `gaji_p
 CREATE TABLE `gaji_bonus` (
   `id_gaji` int(11) DEFAULT NULL,
   `id_bonus` int(11) DEFAULT NULL,
+  `nilai_bonus` int(11) DEFAULT NULL,
   `tgl_gaji` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -113,14 +121,26 @@ CREATE TABLE `gaji_bonus` (
 -- Dumping data for table `gaji_bonus`
 --
 
-INSERT INTO `gaji_bonus` (`id_gaji`, `id_bonus`, `tgl_gaji`) VALUES
-(29, 3, '2024-08-09 10:28:34'),
-(30, 3, '2024-08-16 10:30:25'),
-(31, 3, '2024-08-08 10:33:06'),
-(32, 3, '2024-08-08 10:35:01'),
-(33, 3, '2024-08-08 10:36:46'),
-(34, 2, '2024-08-08 10:38:23'),
-(34, 3, '2024-08-08 10:38:23');
+INSERT INTO `gaji_bonus` (`id_gaji`, `id_bonus`, `nilai_bonus`, `tgl_gaji`) VALUES
+(36, 5, 0, '2024-08-12 11:23:44'),
+(36, 4, 0, '2024-08-12 11:23:44'),
+(37, 2, 0, '2024-08-20 08:37:21'),
+(37, 4, 0, '2024-08-20 08:37:21'),
+(38, 2, 0, '2024-08-20 08:56:20'),
+(38, 4, 0, '2024-08-20 08:56:20'),
+(39, 5, 0, '2024-08-31 18:49:01'),
+(39, 4, 0, '2024-08-31 18:49:01'),
+(41, 2, 0, '2024-08-21 09:53:04'),
+(41, 4, 0, '2024-08-21 09:53:04'),
+(42, 2, 0, '2024-08-21 09:57:22'),
+(42, 4, 0, '2024-08-21 09:57:22'),
+(43, 3, 0, '2024-08-21 10:04:13'),
+(46, 2, 0, '2022-04-30 10:31:14'),
+(46, 4, 0, '2022-04-30 10:31:14'),
+(47, 2, 0, '2021-01-31 10:32:21'),
+(47, 4, 0, '2021-01-31 10:32:21'),
+(50, 2, 100000, '2024-01-31 10:47:35'),
+(50, 6, 75000, '2024-01-31 10:47:35');
 
 -- --------------------------------------------------------
 
@@ -131,6 +151,7 @@ INSERT INTO `gaji_bonus` (`id_gaji`, `id_bonus`, `tgl_gaji`) VALUES
 CREATE TABLE `gaji_potongan` (
   `id_gaji` int(11) DEFAULT NULL,
   `id_potongan` int(11) DEFAULT NULL,
+  `nilai_potongan` int(11) DEFAULT NULL,
   `tgl_gaji` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -138,28 +159,33 @@ CREATE TABLE `gaji_potongan` (
 -- Dumping data for table `gaji_potongan`
 --
 
-INSERT INTO `gaji_potongan` (`id_gaji`, `id_potongan`, `tgl_gaji`) VALUES
-(25, 2, '2024-08-10 10:17:25'),
-(25, 6, '2024-08-10 10:17:25'),
-(25, 7, '2024-08-10 10:17:25'),
-(26, 2, '2024-08-10 10:19:29'),
-(26, 6, '2024-08-10 10:19:29'),
-(26, 7, '2024-08-10 10:19:29'),
-(28, 6, '2024-08-09 10:27:07'),
-(28, 7, '2024-08-09 10:27:07'),
-(29, 6, '2024-08-09 10:28:34'),
-(29, 7, '2024-08-09 10:28:34'),
-(30, 6, '2024-08-16 10:30:25'),
-(30, 7, '2024-08-16 10:30:25'),
-(31, 6, '2024-08-08 10:33:06'),
-(31, 7, '2024-08-08 10:33:06'),
-(32, 2, '2024-08-08 10:35:01'),
-(32, 6, '2024-08-08 10:35:01'),
-(32, 7, '2024-08-08 10:35:01'),
-(33, 6, '2024-08-08 10:36:46'),
-(33, 7, '2024-08-08 10:36:46'),
-(34, 6, '2024-08-08 10:38:23'),
-(34, 7, '2024-08-08 10:38:23');
+INSERT INTO `gaji_potongan` (`id_gaji`, `id_potongan`, `nilai_potongan`, `tgl_gaji`) VALUES
+(25, 2, NULL, '2024-08-10 10:17:25'),
+(25, 6, NULL, '2024-08-10 10:17:25'),
+(25, 7, NULL, '2024-08-10 10:17:25'),
+(36, 2, NULL, '2024-08-12 11:23:44'),
+(36, 6, NULL, '2024-08-12 11:23:44'),
+(37, 2, NULL, '2024-08-20 08:37:21'),
+(37, 6, NULL, '2024-08-20 08:37:21'),
+(38, 2, NULL, '2024-08-20 08:56:20'),
+(38, 6, NULL, '2024-08-20 08:56:20'),
+(39, 2, NULL, '2024-08-31 18:49:01'),
+(39, 6, NULL, '2024-08-31 18:49:01'),
+(39, 7, NULL, '2024-08-31 18:49:01'),
+(41, 6, NULL, '2024-08-21 09:53:04'),
+(41, 7, NULL, '2024-08-21 09:53:04'),
+(42, 6, NULL, '2024-08-21 09:57:22'),
+(42, 7, NULL, '2024-08-21 09:57:22'),
+(43, 6, NULL, '2024-08-21 10:04:13'),
+(43, 7, NULL, '2024-08-21 10:04:13'),
+(46, 6, NULL, '2022-04-30 10:31:14'),
+(46, 7, NULL, '2022-04-30 10:31:14'),
+(47, 2, NULL, '2021-01-31 10:32:21'),
+(47, 6, NULL, '2021-01-31 10:32:21'),
+(47, 7, NULL, '2021-01-31 10:32:21'),
+(50, 2, 30000, '2024-01-31 10:47:35'),
+(50, 6, 5, '2024-01-31 10:47:35'),
+(50, 7, 23, '2024-01-31 10:47:35');
 
 -- --------------------------------------------------------
 
@@ -170,18 +196,19 @@ INSERT INTO `gaji_potongan` (`id_gaji`, `id_potongan`, `tgl_gaji`) VALUES
 CREATE TABLE `jabatan` (
   `id_jabatan` int(11) NOT NULL,
   `nama_jabatan` varchar(50) NOT NULL,
-  `gaji_pokok` int(11) NOT NULL
+  `gaji_pokok` int(11) NOT NULL,
+  `gaji_bonus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `jabatan`
 --
 
-INSERT INTO `jabatan` (`id_jabatan`, `nama_jabatan`, `gaji_pokok`) VALUES
-(4, 'kepala toko', 3300000),
-(5, 'bendahara', 2800000),
-(6, 'kasir', 2600000),
-(7, 'pramuniaga', 2400000);
+INSERT INTO `jabatan` (`id_jabatan`, `nama_jabatan`, `gaji_pokok`, `gaji_bonus`) VALUES
+(4, 'kepala toko', 3300000, 250000),
+(5, 'bendahara', 2800000, 200000),
+(6, 'kasir', 2600000, 75000),
+(7, 'pramuniaga', 2400000, 75000);
 
 -- --------------------------------------------------------
 
@@ -207,8 +234,11 @@ CREATE TABLE `pegawai` (
 --
 
 INSERT INTO `pegawai` (`id_pegawai`, `id_jabatan`, `nama_pegawai`, `alamat`, `tempat_lahir`, `tanggal_lahir`, `tgl_masuk_kerja`, `username`, `password`, `no_hp`) VALUES
-(3, 4, 'jokowi', 'jakarta', 'solo', '2024-08-08', '2024-08-08', 'awikwok', 'jokowi123', '2147483647'),
-(4, 5, 'prabowo', 'jakarta', 'jakarta', '2024-08-01', '2024-08-11', 'gedagedi', 'gibran123', '2147483647');
+(3, 4, 'Hendra', 'sendang senori tuban', 'Tuban', '2024-08-08', '2024-08-08', 'Amirul', 'amirul123', '2147483647'),
+(4, 5, 'sairoh', 'jakarta', 'jakarta', '2024-08-01', '2024-08-11', 'sairoh', 'sairoh123', '2147483647'),
+(8, 7, 'Taufik', 'seturan', 'wonosobo', '2003-01-14', '2024-08-20', 'taufik', 'taufik123', '081332552410'),
+(9, 6, 'Amirul', 'senori', 'Tuban', '2004-01-31', '2024-08-01', 'Mukminin', 'mukminin12', '083857054402'),
+(10, 7, 'Mukminin', 'bantul', 'tuban', '2003-02-19', '2024-08-01', 'mirul', 'mirul123', '081332551322');
 
 -- --------------------------------------------------------
 
@@ -305,13 +335,13 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `bonus`
 --
 ALTER TABLE `bonus`
-  MODIFY `id_bonus` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_bonus` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `gaji`
 --
 ALTER TABLE `gaji`
-  MODIFY `id_gaji` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `id_gaji` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT for table `jabatan`
@@ -323,7 +353,7 @@ ALTER TABLE `jabatan`
 -- AUTO_INCREMENT for table `pegawai`
 --
 ALTER TABLE `pegawai`
-  MODIFY `id_pegawai` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id_pegawai` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `potongan`
